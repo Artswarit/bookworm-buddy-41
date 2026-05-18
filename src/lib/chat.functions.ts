@@ -70,10 +70,11 @@ export const sendChat = createServerFn({ method: "POST" })
             type: "object",
             properties: {
               intent: { type: "string" },
-              confidence: { type: "number" },
+              confidence: { type: "number", minimum: 0, maximum: 100 },
               matched_email: { type: ["string", "null"] },
+              source: { type: "string", enum: ["database", "knowledge_base", "none"] },
             },
-            required: ["intent", "confidence", "matched_email"],
+            required: ["intent", "confidence", "matched_email", "source"],
             additionalProperties: false,
           },
         },
