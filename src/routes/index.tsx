@@ -26,7 +26,15 @@ type Msg = {
   content: string;
   confidence?: number;
   escalated?: boolean;
+  timestamp: number;
 };
+
+function formatTime(ts: number) {
+  return new Date(ts).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
 
 function ChatPage() {
   const send = useServerFn(sendChat);
@@ -34,7 +42,8 @@ function ChatPage() {
     {
       role: "assistant",
       content:
-        "Hi! I'm BookLeaf's author support assistant. Share your email and ask about your royalties, publishing stage, ISBN, or submission dates and I'll help right away.",
+        "Hi! I'm BookLeaf's author support assistant. Share your registered email and ask about your royalties, publishing stage, ISBN, author copies, or submission dates — or ask any general publishing question.",
+      timestamp: Date.now(),
     },
   ]);
   const [input, setInput] = useState("");
@@ -53,9 +62,17 @@ function ChatPage() {
     const text = input.trim();
     if (!text || loading) return;
     setInput("");
-    const next: Msg[] = [...messages, { role: "user", content: text }];
+    const next: Msg[] = [
+      ...messages,
+      { role: "user", content: text, timestamp: Date.now() },
+    ];
     setMessages(next);
     setLoading(true);
+
+    // 25s safety timeout — n8n / AI gateway sometimes hang
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 25_000);
+
     try {
       const res = await send({
         data: {
@@ -70,29 +87,33 @@ function ChatPage() {
           content: res.reply,
           confidence: res.confidence,
           escalated: res.escalated,
+          timestamp: Date.now(),
         },
       ]);
     } catch (err: any) {
+      const isAbort = err?.name === "AbortError";
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content:
-            err?.message ??
-            "Sorry, something went wrong. Please try again in a moment.",
+          content: isAbort
+            ? "That took longer than expected. Your request has been escalated to a human support agent."
+            : "We couldn't reach the assistant just now. Your request has been escalated to a human support agent.",
           confidence: 0,
           escalated: true,
+          timestamp: Date.now(),
         },
       ]);
     } finally {
+      clearTimeout(timeout);
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-muted/30">
+    <div className="flex h-svh flex-col bg-muted/30">
       <header className="border-b bg-background">
-        <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-4">
+        <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3 sm:py-4">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <BookOpen className="h-5 w-5" />
           </div>
@@ -105,8 +126,11 @@ function ChatPage() {
         </div>
       </header>
 
-      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col px-4">
-        <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto py-6">
+      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col overflow-hidden px-3 sm:px-4">
+        <div
+          ref={scrollRef}
+          className="flex-1 space-y-4 overflow-y-auto py-4 sm:py-6"
+        >
           {messages.map((m, i) => (
             <MessageBubble key={i} msg={m} />
           ))}
@@ -114,7 +138,7 @@ function ChatPage() {
             <div className="flex items-start gap-3">
               <Avatar role="assistant" />
               <div className="rounded-2xl rounded-tl-sm bg-background px-4 py-3 shadow-sm">
-                <div className="flex gap-1">
+                <div className="flex items-center gap-1" aria-label="Assistant is typing">
                   <Dot /> <Dot delay="150ms" /> <Dot delay="300ms" />
                 </div>
               </div>
@@ -124,7 +148,7 @@ function ChatPage() {
 
         <form
           onSubmit={onSubmit}
-          className="sticky bottom-0 border-t bg-background/95 py-4 backdrop-blur"
+          className="sticky bottom-0 border-t bg-background/95 py-3 sm:py-4 backdrop-blur"
         >
           <div className="flex gap-2">
             <Input
@@ -133,12 +157,16 @@ function ChatPage() {
               placeholder="Ask about your book, royalties, ISBN…"
               disabled={loading}
               autoFocus
+              aria-label="Type your message"
             />
             <Button type="submit" disabled={loading || !input.trim()}>
               <Send className="h-4 w-4" />
               <span className="sr-only">Send</span>
             </Button>
           </div>
+          <p className="mt-2 text-[11px] text-muted-foreground">
+            Replies with low confidence are automatically escalated to a human teammate.
+          </p>
         </form>
       </main>
     </div>
@@ -150,7 +178,11 @@ function MessageBubble({ msg }: { msg: Msg }) {
   return (
     <div className={`flex items-start gap-3 ${isUser ? "flex-row-reverse" : ""}`}>
       <Avatar role={msg.role} />
-      <div className={`flex max-w-[80%] flex-col gap-1 ${isUser ? "items-end" : "items-start"}`}>
+      <div
+        className={`flex max-w-[85%] flex-col gap-1 sm:max-w-[80%] ${
+          isUser ? "items-end" : "items-start"
+        }`}
+      >
         <div
           className={`whitespace-pre-wrap rounded-2xl px-4 py-3 text-sm shadow-sm ${
             isUser
@@ -160,12 +192,27 @@ function MessageBubble({ msg }: { msg: Msg }) {
         >
           {msg.content}
         </div>
-        {msg.escalated && (
-          <Badge variant="destructive" className="gap-1">
-            <AlertTriangle className="h-3 w-3" />
-            Escalated to Human
-          </Badge>
-        )}
+        <div
+          className={`flex items-center gap-2 px-1 text-[11px] text-muted-foreground ${
+            isUser ? "flex-row-reverse" : ""
+          }`}
+        >
+          <span>{formatTime(msg.timestamp)}</span>
+          {msg.escalated && (
+            <Badge variant="destructive" className="gap-1 px-1.5 py-0 text-[10px]">
+              <AlertTriangle className="h-3 w-3" />
+              Escalated to Human
+            </Badge>
+          )}
+          {!isUser &&
+            typeof msg.confidence === "number" &&
+            msg.confidence > 0 &&
+            !msg.escalated && (
+              <span className="text-muted-foreground/70">
+                {msg.confidence}% confidence
+              </span>
+            )}
+        </div>
       </div>
     </div>
   );
@@ -176,7 +223,9 @@ function Avatar({ role }: { role: "user" | "assistant" }) {
   return (
     <div
       className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
-        isUser ? "bg-secondary text-secondary-foreground" : "bg-primary text-primary-foreground"
+        isUser
+          ? "bg-secondary text-secondary-foreground"
+          : "bg-primary text-primary-foreground"
       }`}
     >
       {isUser ? <UserRound className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
