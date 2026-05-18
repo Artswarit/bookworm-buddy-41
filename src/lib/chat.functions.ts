@@ -89,107 +89,139 @@ export const sendChat = createServerFn({ method: "POST" })
 
     let matchedEmail: string | null = null;
     let intent = "other";
-    let confidence = 0.5;
+    let confidence = 50;
+    let source: "database" | "knowledge_base" | "none" = "none";
     let assistantText = "";
+    let authorFoundThisTurn = false;
 
-    // up to 4 tool-call rounds
-    for (let i = 0; i < 4; i++) {
-      const res = await fetch(
-        "https://ai.gateway.lovable.dev/v1/chat/completions",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${apiKey}`,
-            "Content-Type": "application/json",
+    try {
+      for (let i = 0; i < 4; i++) {
+        const res = await fetch(
+          "https://ai.gateway.lovable.dev/v1/chat/completions",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${apiKey}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              model: "google/gemini-2.5-flash",
+              messages,
+              tools,
+            }),
           },
-          body: JSON.stringify({
-            model: "google/gemini-2.5-flash",
-            messages,
-            tools,
-          }),
-        },
-      );
+        );
 
-      if (!res.ok) {
-        if (res.status === 429)
-          throw new Error("Rate limit exceeded. Please try again shortly.");
-        if (res.status === 402)
-          throw new Error("AI credits exhausted. Please add credits.");
-        throw new Error(`AI gateway error: ${res.status}`);
-      }
-
-      const json = await res.json();
-      const msg = json.choices?.[0]?.message;
-      if (!msg) throw new Error("Empty AI response");
-
-      messages.push(msg);
-
-      const toolCalls = msg.tool_calls ?? [];
-      if (toolCalls.length === 0) {
-        assistantText = msg.content ?? "";
-        break;
-      }
-
-      for (const tc of toolCalls) {
-        const name = tc.function?.name;
-        let args: any = {};
-        try {
-          args = JSON.parse(tc.function?.arguments ?? "{}");
-        } catch {}
-
-        let toolResult: any = {};
-        if (name === "lookup_author") {
-          const email = String(args.email ?? "").toLowerCase().trim();
-          const { data: author } = await supabaseAdmin
-            .from("authors")
-            .select("*")
-            .ilike("email", email)
-            .maybeSingle();
-          if (author) {
-            matchedEmail = author.email;
-            toolResult = { found: true, author };
-          } else {
-            toolResult = { found: false };
-          }
-        } else if (name === "record_response") {
-          intent = String(args.intent ?? "other");
-          confidence = Number(args.confidence ?? 0.5);
-          if (args.matched_email) matchedEmail = String(args.matched_email);
-          toolResult = { ok: true };
-          if (msg.content) assistantText = msg.content;
-        } else {
-          toolResult = { error: "unknown tool" };
+        if (!res.ok) {
+          if (res.status === 429)
+            throw new Error("RATE_LIMIT");
+          if (res.status === 402)
+            throw new Error("CREDITS");
+          throw new Error(`GATEWAY_${res.status}`);
         }
 
-        messages.push({
-          role: "tool",
-          tool_call_id: tc.id,
-          content: JSON.stringify(toolResult),
-        });
-      }
+        const json = await res.json();
+        const msg = json.choices?.[0]?.message;
+        if (!msg) throw new Error("EMPTY");
 
-      // If record_response was called and we already have text, we can stop.
-      if (assistantText && toolCalls.some((t: any) => t.function?.name === "record_response")) {
-        break;
+        messages.push(msg);
+
+        const toolCalls = msg.tool_calls ?? [];
+        if (toolCalls.length === 0) {
+          assistantText = msg.content ?? "";
+          break;
+        }
+
+        for (const tc of toolCalls) {
+          const name = tc.function?.name;
+          let args: any = {};
+          try {
+            args = JSON.parse(tc.function?.arguments ?? "{}");
+          } catch {}
+
+          let toolResult: any = {};
+          if (name === "lookup_author") {
+            const email = String(args.email ?? "").toLowerCase().trim();
+            const { data: author } = await supabaseAdmin
+              .from("authors")
+              .select("*")
+              .ilike("email", email)
+              .maybeSingle();
+            if (author) {
+              matchedEmail = author.email;
+              authorFoundThisTurn = true;
+              toolResult = { found: true, author };
+            } else {
+              toolResult = {
+                found: false,
+                note: "No author with that email exists. Apologise briefly, ask the user to double-check the email, and set confidence below 80.",
+              };
+            }
+          } else if (name === "record_response") {
+            intent = String(args.intent ?? "other");
+            // accept either 0-1 or 0-100; normalise to 0-100
+            const raw = Number(args.confidence ?? 50);
+            confidence = raw <= 1 ? Math.round(raw * 100) : Math.round(raw);
+            if (args.matched_email) matchedEmail = String(args.matched_email);
+            const s = String(args.source ?? "none");
+            source = s === "database" || s === "knowledge_base" ? s : "none";
+            toolResult = { ok: true };
+            if (msg.content) assistantText = msg.content;
+          } else {
+            toolResult = { error: "unknown tool" };
+          }
+
+          messages.push({
+            role: "tool",
+            tool_call_id: tc.id,
+            content: JSON.stringify(toolResult),
+          });
+        }
+
+        if (
+          assistantText &&
+          toolCalls.some((t: any) => t.function?.name === "record_response")
+        ) {
+          break;
+        }
       }
+    } catch (err: any) {
+      const code = err?.message ?? "";
+      if (code === "RATE_LIMIT") {
+        assistantText =
+          "We're getting a lot of questions right now — please try again in a moment. Meanwhile, I've flagged this for a human teammate.";
+      } else if (code === "CREDITS") {
+        assistantText =
+          "Our assistant is temporarily unavailable. Your message has been forwarded to a human support agent.";
+      } else {
+        assistantText =
+          "Something went wrong on our side. Your request has been escalated to a human support agent.";
+      }
+      confidence = 0;
     }
 
-    if (!assistantText) {
+    if (!assistantText.trim()) {
       assistantText =
-        "I'm not sure how to help with that — let me hand you off to a human teammate.";
-      confidence = 0.2;
+        "I couldn't find a confident answer for that. Your request has been escalated to a human support agent.";
+      confidence = Math.min(confidence, 40);
     }
 
-    const escalated = confidence < 0.6;
+    // Confidence below 80 ⇒ escalate per assignment spec.
+    const escalated = confidence < 80;
 
-    await supabaseAdmin.from("query_logs").insert({
-      user_query: data.message,
-      detected_intent: intent,
-      matched_email: matchedEmail,
-      bot_response: assistantText,
-      confidence_score: confidence,
-      escalated,
-    });
+    // Best-effort logging — never break the response if logging fails.
+    try {
+      await supabaseAdmin.from("query_logs").insert({
+        user_query: data.message,
+        detected_intent: intent,
+        matched_email: matchedEmail,
+        bot_response: assistantText,
+        confidence_score: confidence,
+        escalated,
+      });
+    } catch (logErr) {
+      console.error("query_logs insert failed:", logErr);
+    }
 
     return {
       reply: assistantText,
@@ -197,5 +229,7 @@ export const sendChat = createServerFn({ method: "POST" })
       escalated,
       intent,
       matchedEmail,
+      source,
+      authorFound: authorFoundThisTurn,
     };
   });
