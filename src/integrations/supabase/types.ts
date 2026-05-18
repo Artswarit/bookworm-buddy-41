@@ -56,6 +56,42 @@ export type Database = {
         }
         Relationships: []
       }
+      query_logs: {
+        Row: {
+          bot_response: string | null
+          confidence_score: number | null
+          created_at: string
+          detected_intent: string | null
+          escalated: boolean | null
+          id: string
+          matched_email: string | null
+          updated_at: string
+          user_query: string | null
+        }
+        Insert: {
+          bot_response?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          detected_intent?: string | null
+          escalated?: boolean | null
+          id?: string
+          matched_email?: string | null
+          updated_at?: string
+          user_query?: string | null
+        }
+        Update: {
+          bot_response?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          detected_intent?: string | null
+          escalated?: boolean | null
+          id?: string
+          matched_email?: string | null
+          updated_at?: string
+          user_query?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
