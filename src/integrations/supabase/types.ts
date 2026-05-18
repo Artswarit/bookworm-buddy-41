@@ -14,7 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      authors: {
+        Row: {
+          add_on_services: string | null
+          book_live_date: string | null
+          book_title: string | null
+          created_at: string
+          email: string | null
+          final_submission_date: string | null
+          id: string
+          isbn: string | null
+          publishing_stage: string | null
+          royalty_status: string | null
+          updated_at: string
+        }
+        Insert: {
+          add_on_services?: string | null
+          book_live_date?: string | null
+          book_title?: string | null
+          created_at?: string
+          email?: string | null
+          final_submission_date?: string | null
+          id?: string
+          isbn?: string | null
+          publishing_stage?: string | null
+          royalty_status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          add_on_services?: string | null
+          book_live_date?: string | null
+          book_title?: string | null
+          created_at?: string
+          email?: string | null
+          final_submission_date?: string | null
+          id?: string
+          isbn?: string | null
+          publishing_stage?: string | null
+          royalty_status?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
