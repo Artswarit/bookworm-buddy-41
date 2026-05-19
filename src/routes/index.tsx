@@ -42,7 +42,7 @@ function ChatPage() {
     {
       role: "assistant",
       content:
-        "Hi! I'm BookLeaf's author support assistant. Share your registered email and ask about your royalties, publishing stage, ISBN, author copies, or submission dates — or ask any general publishing question.",
+        "Hi! I'm BookLeaf's author support assistant. Please share your registered email and ask me about royalties, your book's status, ISBNs, author copies, or submission dates. You can also ask any general publishing questions.",
       timestamp: Date.now(),
     },
   ]);
@@ -97,8 +97,8 @@ function ChatPage() {
         {
           role: "assistant",
           content: isAbort
-            ? "That took longer than expected. Your request has been escalated to a human support agent."
-            : "We couldn't reach the assistant just now. Your request has been escalated to a human support agent.",
+            ? "That took a bit longer than expected. I've shared your request with our support team so they can look into it."
+            : "I'm not able to connect to the assistant right now. I've shared your request with our support team and they'll get back to you.",
           confidence: 0,
           escalated: true,
           timestamp: Date.now(),
@@ -165,7 +165,7 @@ function ChatPage() {
             </Button>
           </div>
           <p className="mt-2 text-[11px] text-muted-foreground">
-            Replies with low confidence are automatically escalated to a human teammate.
+            If I can't answer your question, our support team will step in to help.
           </p>
         </form>
       </main>
@@ -184,7 +184,7 @@ function MessageBubble({ msg }: { msg: Msg }) {
         }`}
       >
         <div
-          className={`whitespace-pre-wrap rounded-2xl px-4 py-3 text-sm shadow-sm ${
+          className={`whitespace-pre-wrap break-words rounded-2xl px-4 py-3 text-sm shadow-sm ${
             isUser
               ? "rounded-tr-sm bg-primary text-primary-foreground"
               : "rounded-tl-sm bg-background text-foreground"
@@ -193,14 +193,14 @@ function MessageBubble({ msg }: { msg: Msg }) {
           {msg.content}
         </div>
         <div
-          className={`flex items-center gap-2 px-1 text-[11px] text-muted-foreground ${
+          className={`flex flex-wrap items-center gap-1.5 px-1 text-[11px] text-muted-foreground ${
             isUser ? "flex-row-reverse" : ""
           }`}
         >
           <span>{formatTime(msg.timestamp)}</span>
           {msg.escalated && (
-            <Badge variant="destructive" className="gap-1 px-1.5 py-0 text-[10px]">
-              <AlertTriangle className="h-3 w-3" />
+            <Badge variant="destructive" className="gap-1 px-1.5 py-0 text-[10px] shrink-0">
+              <AlertTriangle className="h-3 w-3 shrink-0" />
               Escalated to Human
             </Badge>
           )}
@@ -208,7 +208,7 @@ function MessageBubble({ msg }: { msg: Msg }) {
             typeof msg.confidence === "number" &&
             msg.confidence > 0 &&
             !msg.escalated && (
-              <span className="text-muted-foreground/70">
+              <span className="text-muted-foreground/70 shrink-0">
                 {msg.confidence}% confidence
               </span>
             )}
