@@ -628,8 +628,8 @@ export const sendChat = createServerFn({ method: "POST" })
     }
 
     const strategies: Array<{ name: string; fn: () => Promise<ChatResult> }> = [];
-    if (process.env.N8N_WEBHOOK_URL || process.env.VITE_N8N_WEBHOOK_URL) strategies.push({ name: "n8n-webhook", fn: () => sendViaN8nWebhook(data) });
-    if (process.env.N8N_MCP_BEARER_TOKEN) strategies.push({ name: "n8n-mcp", fn: () => sendViaN8nMcp(data) });
+    if (process.env.N8N_WEBHOOK_URL || process.env.VITE_N8N_WEBHOOK_URL) strategies.push({ name: "n8n-webhook", fn: () => sendViaN8nWebhook(data, matchedEmail) });
+    if (process.env.N8N_MCP_BEARER_TOKEN) strategies.push({ name: "n8n-mcp", fn: () => sendViaN8nMcp(data, matchedEmail) });
     strategies.push({ name: "built-in-kb", fn: () => sendViaBuiltinKB(data) });
 
     let lastError: any;
