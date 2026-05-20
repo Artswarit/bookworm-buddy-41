@@ -830,7 +830,7 @@ async function sendViaBuiltinKB(
   }
   // 8. Book Status / stage (Hinglish/English)
   else if (
-    /\b(book.*(live|status|stage|progress|ready)|is.*book.*live|where.*my.*book|my book.*(status|stage)|kab live|kaha hai|kab tak|kab publish|stage kya)\b/.test(
+    /\b(status|stage|progress|publish|live|ready|where.*book|book.*(status|stage|live|progress|ready)|kab live|kaha hai|kab tak|kab publish|stage kya)\b/.test(
       query,
     )
   ) {
@@ -1024,15 +1024,30 @@ export const sendChat = createServerFn({ method: "POST" })
     }
 
     // 4. Routing strategies (using enhanced/cleaned message)
+    // When we already have a session email, prioritize built-in KB first
+    // because it has direct database access and can answer author-specific queries immediately
     const strategies: Array<{ name: string; fn: () => Promise<ChatResult> }> = [];
-    if (process.env.N8N_WEBHOOK_URL || process.env.VITE_N8N_WEBHOOK_URL)
-      strategies.push({
-        name: "n8n-webhook",
-        fn: () => sendViaN8nWebhook(enhancedData, matchedEmail),
-      });
-    if (process.env.N8N_MCP_BEARER_TOKEN)
-      strategies.push({ name: "n8n-mcp", fn: () => sendViaN8nMcp(enhancedData, matchedEmail) });
-    strategies.push({ name: "built-in-kb", fn: () => sendViaBuiltinKB(enhancedData, matchedEmail) });
+    if (matchedEmail) {
+      // Built-in KB goes first when we know the author (direct DB access)
+      strategies.push({ name: "built-in-kb", fn: () => sendViaBuiltinKB(enhancedData, matchedEmail) });
+      if (process.env.N8N_WEBHOOK_URL || process.env.VITE_N8N_WEBHOOK_URL)
+        strategies.push({
+          name: "n8n-webhook",
+          fn: () => sendViaN8nWebhook(enhancedData, matchedEmail),
+        });
+      if (process.env.N8N_MCP_BEARER_TOKEN)
+        strategies.push({ name: "n8n-mcp", fn: () => sendViaN8nMcp(enhancedData, matchedEmail) });
+    } else {
+      // No session email yet, try n8n first for general queries
+      if (process.env.N8N_WEBHOOK_URL || process.env.VITE_N8N_WEBHOOK_URL)
+        strategies.push({
+          name: "n8n-webhook",
+          fn: () => sendViaN8nWebhook(enhancedData, matchedEmail),
+        });
+      if (process.env.N8N_MCP_BEARER_TOKEN)
+        strategies.push({ name: "n8n-mcp", fn: () => sendViaN8nMcp(enhancedData, matchedEmail) });
+      strategies.push({ name: "built-in-kb", fn: () => sendViaBuiltinKB(enhancedData, matchedEmail) });
+    }
 
     let finalResult: ChatResult | null = null;
     for (const { name, fn } of strategies) {
