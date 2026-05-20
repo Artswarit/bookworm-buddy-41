@@ -119,59 +119,62 @@ function ChatPage() {
   };
 
   return (
-    <div className="flex h-svh flex-col bg-muted/30">
-      <header className="border-b bg-background">
-        <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3 sm:py-4">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <BookOpen className="h-5 w-5" />
+    <div className="flex min-h-svh items-center justify-center bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/50 p-4 sm:p-6 lg:p-8">
+      <div className="flex h-[85vh] max-h-[800px] w-full max-w-md flex-col overflow-hidden rounded-2xl bg-background shadow-2xl ring-1 ring-border/50">
+        <header className="border-b bg-background/95 backdrop-blur px-4 py-4 sm:px-6">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+              <BookOpen className="h-5 w-5" />
+            </div>
+            <div>
+              <h1 className="text-base font-semibold leading-tight">BookLeaf Publishing</h1>
+              <p className="text-xs text-muted-foreground">Author Support</p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-base font-semibold leading-tight">BookLeaf Publishing</h1>
-            <p className="text-xs text-muted-foreground">Author Support</p>
-          </div>
-        </div>
-      </header>
+        </header>
 
-      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col overflow-hidden px-3 sm:px-4">
-        <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto py-4 sm:py-6">
-          {messages.map((m, i) => (
-            <MessageBubble key={i} msg={m} />
-          ))}
-          {loading && (
-            <div className="flex items-start gap-3">
-              <Avatar role="assistant" />
-              <div className="rounded-2xl rounded-tl-sm bg-background px-4 py-3 shadow-sm">
-                <div className="flex items-center gap-1" aria-label="Assistant is typing">
-                  <Dot /> <Dot delay="150ms" /> <Dot delay="300ms" />
+        <main className="flex flex-1 flex-col overflow-hidden bg-muted/10">
+          <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto p-4 sm:p-6">
+            {messages.map((m, i) => (
+              <MessageBubble key={i} msg={m} />
+            ))}
+            {loading && (
+              <div className="flex items-start gap-3">
+                <Avatar role="assistant" />
+                <div className="rounded-2xl rounded-tl-sm bg-background px-4 py-3 shadow-sm ring-1 ring-border/50">
+                  <div className="flex items-center gap-1" aria-label="Assistant is typing">
+                    <Dot /> <Dot delay="150ms" /> <Dot delay="300ms" />
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
-
-        <form
-          onSubmit={onSubmit}
-          className="sticky bottom-0 border-t bg-background/95 py-3 sm:py-4 backdrop-blur"
-        >
-          <div className="flex gap-2">
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about your book or royalties or ISBN..."
-              disabled={loading}
-              autoFocus
-              aria-label="Type your message"
-            />
-            <Button type="submit" disabled={loading || !input.trim()}>
-              <Send className="h-4 w-4" />
-              <span className="sr-only">Send</span>
-            </Button>
+            )}
           </div>
-          <p className="mt-2 text-[11px] text-muted-foreground">
-            If I can't answer your question our support team will step right in to help
-          </p>
-        </form>
-      </main>
+
+          <form
+            onSubmit={onSubmit}
+            className="border-t bg-background p-4 sm:p-6"
+          >
+            <div className="flex gap-2">
+              <Input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask about your book or royalties or ISBN..."
+                disabled={loading}
+                autoFocus
+                className="rounded-xl bg-muted/50"
+                aria-label="Type your message"
+              />
+              <Button type="submit" size="icon" className="rounded-xl shrink-0" disabled={loading || !input.trim()}>
+                <Send className="h-4 w-4" />
+                <span className="sr-only">Send</span>
+              </Button>
+            </div>
+            <p className="mt-3 text-center text-[11px] text-muted-foreground">
+              If I can't answer your question our support team will step right in to help
+            </p>
+          </form>
+        </main>
+      </div>
     </div>
   );
 }
