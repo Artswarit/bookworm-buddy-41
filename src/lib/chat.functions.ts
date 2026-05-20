@@ -849,8 +849,11 @@ async function sendViaBuiltinKB(
     intent = "general_info";
     reply = KNOWLEDGE_BASE.contact;
   }
-  // 19. Greeting
-  else if (/^(hi|hello|hey|good morning|good evening)\b/.test(query.trim())) {
+  // 19. Greeting and Introductions
+  else if (
+    /^(hi+|hello+|hey+|heya|howdy|good morning|good evening|yo)\b/i.test(query.trim()) ||
+    /\b(my name is|i am|i'm|this is)\b/i.test(query.trim())
+  ) {
     intent = "general_info";
     reply = "Hi there! 👋 I'm the BookLeaf support assistant. How can I help you with your publishing journey today";
     confidence = 98;
@@ -966,9 +969,16 @@ export const sendChat = createServerFn({ method: "POST" })
         const result = await fn();
 
         if (result && result.reply && result.reply.trim().length > 0) {
-          console.log(`[sendChat] ${name} succeeded`);
-          finalResult = result;
-          break;
+          console.log(`[sendChat] ${name} returned confidence ${result.confidence}`);
+          
+          if (!finalResult || result.confidence > finalResult.confidence) {
+            finalResult = result;
+          }
+
+          if (!result.escalated && result.confidence >= 80) {
+            console.log(`[sendChat] ${name} succeeded with high confidence. Break.`);
+            break;
+          }
         }
       } catch (err: unknown) {
         const errMsg = err instanceof Error ? err.message : String(err);
