@@ -869,6 +869,9 @@ function sanitizeReplyForHumanTone(reply: string): string {
   return reply
     // Remove all commas
     .replace(/,/g, "")
+    // Remove em dashes (—), en dashes (–), and spaced hyphens
+    .replace(/[—–]/g, " ")
+    .replace(/\s-\s/g, " ")
     // Replace colons with a natural conversational transition
     .replace(/:\s*/g, " is ")
     // Remove semicolons
