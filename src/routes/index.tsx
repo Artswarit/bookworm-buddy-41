@@ -42,7 +42,7 @@ function ChatPage() {
     {
       role: "assistant",
       content:
-        "Hi! I'm BookLeaf's author support assistant. Please share your registered email and ask me about royalties, your book's status, ISBNs, author copies, or submission dates. You can also ask any general publishing questions.",
+        "Hey! I'm the BookLeaf support assistant. Drop your registered email so I can pull up your account and help you with your royalties book status ISBN copies or anything else on your mind!",
       timestamp: Date.now(),
     },
   ]);
@@ -105,8 +105,8 @@ function ChatPage() {
         {
           role: "assistant",
           content: isAbort
-            ? "That took a bit longer than expected. I've shared your request with our support team so they can look into it."
-            : "I'm not able to connect to the assistant right now. I've shared your request with our support team and they'll get back to you.",
+            ? "That took a bit longer than expected but I have shared your request with our support team so they can look into it right away"
+            : "I can't connect to the assistant right now but I have passed your message to our support team and they will get back to you quickly",
           confidence: 0,
           escalated: true,
           timestamp: Date.now(),
@@ -157,7 +157,7 @@ function ChatPage() {
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about your book, royalties, ISBN…"
+              placeholder="Ask about your book or royalties or ISBN..."
               disabled={loading}
               autoFocus
               aria-label="Type your message"
@@ -168,7 +168,7 @@ function ChatPage() {
             </Button>
           </div>
           <p className="mt-2 text-[11px] text-muted-foreground">
-            If I can't answer your question, our support team will step in to help.
+            If I can't answer your question our support team will step right in to help
           </p>
         </form>
       </main>

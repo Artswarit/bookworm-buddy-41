@@ -30,41 +30,41 @@ type ChatResult = {
 // ─── Knowledge Base (all assignment-required topics) ─────────────────
 const KNOWLEDGE_BASE: Record<string, string> = {
   publishing_timeline:
-    "Our publishing process usually takes about 45 to 60 days from start to finish. We'll start with a manuscript review which takes 1 to 2 weeks. After that, we'll dive into editing, cover design, and formatting, which takes about 3 to 4 weeks. Once you give us the green light on the final proof, your book will go live on the stores within 7 days!",
+    "Our publishing process usually takes about 45 to 60 days from start to finish. We start with a manuscript review which takes 1 to 2 weeks. After that we dive into editing cover design and formatting which takes about 3 to 4 weeks. Once you approve the final proof your book will go live on stores within 7 days!",
   royalty_policy:
-    "Royalties are calculated every month and sent over via bank transfer by the 28th. You'll receive 10% of the price for printed paperback copies and 25% for eBooks. This begins 6 months after your book goes live, as long as you've crossed the 500 rupees minimum threshold.",
+    "Royalties are calculated every month and sent over bank transfer by the 28th. You will get 10% of the price for printed paperback copies and 25% for eBooks. This begins 6 months after your book goes live if you have crossed the 500 rupees minimum threshold.",
   isbn_info:
-    "Don't worry about the ISBN! We've got you covered. We provide a free ISBN during the production stage, and it will be placed on your book's back cover and retail pages automatically.",
+    "Don't worry about the ISBN! We have you covered. We provide a free ISBN during production and it will be placed on your book's back cover and retail pages automatically.",
   author_copies:
-    "We'll send you 2 free paperback copies of your book as soon as it's published! If you ever need more copies, you can order them at a special author discount right from your author dashboard.",
+    "We send you 2 free paperback copies of your book as soon as it's published! If you ever need more copies you can order them at a special author discount right from your dashboard.",
   add_on_services:
-    "We offer quite a few great add-ons like professional editing, custom cover designs, marketing campaigns, and audiobook production. Feel free to request any of these before you approve your final book proof.",
+    "We offer quite a few cool add-ons like professional editing custom cover designs marketing campaigns and audiobook production. Feel free to request any of these before you approve the final book proof.",
   bestseller_package:
-    "Our Bestseller Package is designed to give your book a strong start. We run a targeted Amazon campaign across 3 relevant categories within a 48 to 72 hour launch window, plus we promote it on our social media. We usually kick this off about 30 to 45 days after your book goes live. While we do our absolute best, we can't guarantee a specific sales rank.",
+    "Our Bestseller Package is designed to give your book a strong start. We run a targeted Amazon campaign across 3 relevant categories within a 48 to 72 hour launch window plus promote it on our socials. We usually start this 30 to 45 days after your book goes live. While we do our absolute best we can't guarantee a specific sales rank.",
   pr_campaign:
-    "Our PR Campaign is designed to get your book featured in online news portals and media outlets to boost visibility. We handle everything from writing the press release to distributing it. If you'd like to get started with this, let our support team know!",
+    "Our PR Campaign gets your book featured in online news portals and media outlets to boost visibility. We handle everything from writing the press release to distributing it. Let our support team know if you want to get started!",
   dashboard:
-    "You can log in to your dashboard anytime at dashboard.bookleafpub.com. Just enter your registered email address to receive a secure one-time login code. If you have any trouble getting in, just drop us an email at support@bookleafpub.com and we'll help you out!",
+    "You can log in to your dashboard anytime at dashboard.bookleafpub.com. Just enter your registered email address to receive a secure login code. If you have any trouble getting in just drop us an email at support@bookleafpub.com and we'll help you out!",
   password_reset:
-    "To keep things simple and secure, we use one-time passcodes sent directly to your registered email instead of traditional passwords. That means there's no password to remember or reset! Just head over to dashboard.bookleafpub.com and enter your email to get your login code.",
+    "To keep things simple and secure we use one-time passcodes sent to your registered email instead of traditional passwords. That means there's no password to reset! Just head over to dashboard.bookleafpub.com and enter your email to get your login code.",
   sales_reports:
-    "You can track your sales anytime on the Sales tab of your author dashboard. The data updates once a week and covers all sales from Amazon, Flipkart, and the BookLeaf store.",
+    "You can track your sales anytime on the Sales tab of your author dashboard. The data updates once a week and covers all sales from Amazon Flipkart and the BookLeaf store.",
   distribution:
-    "We distribute your book across Amazon India, Amazon Global, Flipkart, and the BookLeaf bookstore. Please keep in mind that we don't handle offline bookstore placement.",
+    "We distribute your book across Amazon India Amazon Global Flipkart and the BookLeaf bookstore. Please keep in mind that we don't handle offline bookstore placement.",
   amazon_availability:
-    "Your book will be listed on Amazon, Flipkart, and the BookLeaf store within 7 days of going live. Prime eligibility depends entirely on Amazon's fulfillment centers, so it's not something we can guarantee ourselves.",
+    "Your book will list on Amazon Flipkart and the BookLeaf store within 7 days of going live. Prime eligibility depends entirely on Amazon centers so it is not something we can guarantee ourselves.",
   copyright:
     "You retain 100% of the copyright and creative ownership of your work! We only hold non-exclusive distribution rights as outlined in our publishing agreement.",
   pen_name:
-    "Yes, you can absolutely publish under a pen name! Just let our editorial team know during the manuscript review stage so we can set it up correctly on the retail sites and your book cover.",
+    "Yes you can absolutely publish under a pen name! Just let our editorial team know during the manuscript review stage so we can set it up correctly on retail sites and your book cover.",
   refund_policy:
-    "We can issue a full refund as long as production work hasn't started yet. Once our team begins working on your book, we won't be able to process a refund. If you have any specific questions about your order, please email us at support@bookleafpub.com.",
+    "We can issue a full refund as long as production work hasn't started yet. Once our team begins working on your book we won't be able to process a refund. For any specific order questions please email us at support@bookleafpub.com.",
   writing_challenge:
-    "We love hosting writing contests and challenges! You can find all the details, guidelines, and updates for our upcoming challenges on our website and social channels.",
+    "We love hosting writing contests and challenges! You can find all the details and updates for our upcoming challenges on our website and social channels.",
   support_limitations:
-    "We provide all of our support directly over email at support@bookleafpub.com. We aren't able to offer phone or video calls at the moment, but our team works hard to reply to every email within 24 to 48 business hours.",
+    "We provide all of our support directly over email at support@bookleafpub.com. We aren't able to offer phone or video calls right now but our team works hard to reply to every email within 24 to 48 business hours.",
   contact:
-    "You can always reach us at support@bookleafpub.com for help with your book, or info@bookleafpub.com for general inquiries. Our main office is located on New Airport Road, Srinagar, J&K 190005.",
+    "You can always reach us at support@bookleafpub.com for help with your book or info@bookleafpub.com for general inquiries. Our main office is located on New Airport Road Srinagar J&K 190005.",
 };
 
 interface Author {
@@ -88,11 +88,11 @@ const MOCK_AUTHORS: Record<string, Author> = {
     name: "Priya Sharma",
     book_title: "Whispers of the Valley",
     isbn: "978-93-12345-01-1",
-    final_submission_date: "November 10, 2024",
-    book_live_date: "January 15, 2025",
-    royalty_status: "Processed. We credited 4,200 rupees on March 1, 2025.",
+    final_submission_date: "November 10 2024",
+    book_live_date: "January 15 2025",
+    royalty_status: "Processed. We credited 4200 rupees on March 1 2025.",
     add_on_services: ["Bestseller Package", "PR Campaign"],
-    author_copy_status: "Dispatched on January 20, 2025 via BlueDart (AWB: BD9234567)",
+    author_copy_status: "Dispatched on January 20 2025 via BlueDart (AWB: BD9234567)",
     publishing_stage: "Live",
     dashboard_access: "Active",
   },
@@ -101,11 +101,11 @@ const MOCK_AUTHORS: Record<string, Author> = {
     name: "Arjun Mehta",
     book_title: "The Iron Compass",
     isbn: "978-93-12345-02-8",
-    final_submission_date: "January 5, 2025",
-    book_live_date: "April 20, 2025",
+    final_submission_date: "January 5 2025",
+    book_live_date: "April 20 2025",
     royalty_status: "Pending. Your first royalty cycle starts in Q3 2025.",
     add_on_services: ["Award Submission"],
-    author_copy_status: "In progress. We expect to ship them by April 25, 2025.",
+    author_copy_status: "In progress. We expect to ship them by April 25 2025.",
     publishing_stage: "Pre-Launch",
     dashboard_access: "Active",
   },
@@ -114,8 +114,8 @@ const MOCK_AUTHORS: Record<string, Author> = {
     name: "Sara Johnson",
     book_title: "Echoes in Bloom",
     isbn: "978-93-12345-03-5",
-    final_submission_date: "February 18, 2025",
-    book_live_date: "June 1, 2025",
+    final_submission_date: "February 18 2025",
+    book_live_date: "June 1 2025",
     royalty_status: "Not applicable yet because your book isn't live.",
     add_on_services: ["Bestseller Package"],
     author_copy_status: "Not shipped yet since your book is still in progress.",
@@ -127,11 +127,11 @@ const MOCK_AUTHORS: Record<string, Author> = {
     name: "Vikram Nair",
     book_title: "Silicon Dreams",
     isbn: "978-93-12345-04-2",
-    final_submission_date: "September 1, 2024",
-    book_live_date: "December 10, 2024",
-    royalty_status: "Processed. We credited 7,800 rupees on March 1, 2025.",
+    final_submission_date: "September 1 2024",
+    book_live_date: "December 10 2024",
+    royalty_status: "Processed. We credited 7800 rupees on March 1 2025.",
     add_on_services: ["PR Campaign", "Award Submission", "Bestseller Package"],
-    author_copy_status: "Delivered on December 15, 2024.",
+    author_copy_status: "Delivered on December 15 2024.",
     publishing_stage: "Live",
     dashboard_access: "Active",
   },
@@ -140,8 +140,8 @@ const MOCK_AUTHORS: Record<string, Author> = {
     name: "Meera Iyer",
     book_title: "The Last Garden",
     isbn: "978-93-12345-05-9",
-    final_submission_date: "March 10, 2025",
-    book_live_date: "July 15, 2025",
+    final_submission_date: "March 10 2025",
+    book_live_date: "July 15 2025",
     royalty_status: "Not applicable yet.",
     add_on_services: [],
     author_copy_status: "Not shipped yet.",
@@ -557,7 +557,7 @@ async function sendViaBuiltinKB(
   if (validEmails.length > 1) {
     return {
       reply:
-        "I noticed multiple email addresses in your message. To make sure I access the right account, could you please specify which one is your registered author email?",
+        "I found a few email addresses in your message! To make sure I open the right account could you let me know which one is your registered author email?",
       confidence: 80,
       escalated: false,
       intent: "multiple_matches",
@@ -629,7 +629,7 @@ async function sendViaBuiltinKB(
       activeEmail = original.trim().toLowerCase();
     } else {
       reply =
-        "I couldn't find an author account linked to this email. Please check the spelling or registered email address and try again.";
+        "I couldn't find an author account linked to that email. Could you double-check the spelling or try your registered email?";
       confidence = 85;
       escalated = false;
       authorFound = false;
@@ -639,7 +639,7 @@ async function sendViaBuiltinKB(
     return { reply, confidence, escalated, intent, matchedEmail: activeEmail, source, authorFound };
   } else if (hasAtButInvalid) {
     intent = "email_invalid";
-    reply = "Please enter a valid email address so I can look up your profile.";
+    reply = "Could you enter a valid email address so I can look up your profile?";
     confidence = 85;
     escalated = false;
     authorFound = false;
@@ -655,7 +655,7 @@ async function sendViaBuiltinKB(
   ) {
     intent = "general_info";
     reply =
-      "That doesn't seem related to BookLeaf publishing support. How can I help you with your book instead?";
+      "That doesn't seem related to BookLeaf support. How can I help you with your book instead?";
     confidence = 85;
     escalated = false;
     source = "none";
@@ -679,15 +679,16 @@ async function sendViaBuiltinKB(
   ) {
     intent = "royalty";
     if (activeAuthor) {
-      reply = `Hi ${getFirstName(activeAuthor.name)}! I checked your account for "${activeAuthor.book_title}" and here is your royalty status: ${activeAuthor.royalty_status}. Just a quick reminder, monthly statements are sent to your email and payments are processed by the 28th of each month.`;
+      const cleanRoyalty = activeAuthor.royalty_status.replace(/,/g, "").replace(/\./g, "");
+      reply = `Hi ${getFirstName(activeAuthor.name)}! I checked your account for your book "${activeAuthor.book_title}" and your royalty status is ${cleanRoyalty} Just a heads up that statements are sent to your email and payments go through by the 28th of each month`;
       source = "database";
       confidence = 96;
     } else if (activeEmail) {
-      reply = `I couldn't find a publishing account under ${activeEmail}. Please check your registered email address or contact support@bookleafpub.com.`;
+      reply = `I couldn't find a publishing account under ${activeEmail} Could you double-check your registered email address or drop a line to support@bookleafpub.com`;
       confidence = 85;
     } else if (isPersonalQuery) {
       reply =
-        "I can pull up your personal royalty status! Could you share your registered email so I can check your account?";
+        "I can pull up your personal royalty status! Could you share your registered email so I can look that up for you";
       confidence = 85;
     } else {
       reply = KNOWLEDGE_BASE.royalty_policy;
@@ -697,12 +698,12 @@ async function sendViaBuiltinKB(
   else if (/\bisbn\b/.test(query)) {
     intent = "isbn";
     if (activeAuthor) {
-      reply = `Hi ${getFirstName(activeAuthor.name)}! Yes, the free ISBN assigned to your book "${activeAuthor.book_title}" is ${activeAuthor.isbn}. Our production team will place it on your back cover and retail pages automatically, so you don't have to worry about a thing!`;
+      reply = `Hi ${getFirstName(activeAuthor.name)}! Yes the free ISBN for your book "${activeAuthor.book_title}" is ${activeAuthor.isbn} and our production team will place it on the back cover and retail pages automatically so you don't have to worry about a thing`;
       source = "database";
       confidence = 96;
     } else if (isPersonalQuery && !activeEmail) {
       reply =
-        "I can check your assigned ISBN for you! Could you share your registered email so I can look up your details?";
+        "I can check your assigned ISBN for you! Could you share your registered email so I can look up your details";
       confidence = 85;
     } else {
       reply = KNOWLEDGE_BASE.isbn_info;
@@ -716,12 +717,13 @@ async function sendViaBuiltinKB(
   ) {
     intent = "author_copy";
     if (activeAuthor) {
-      reply = `Hi ${getFirstName(activeAuthor.name)}! Here is the latest update on your free author copies for "${activeAuthor.book_title}": ${activeAuthor.author_copy_status}. If you ever want to order extra copies, you can purchase them at discounted author rates directly through your dashboard.`;
+      const cleanCopy = activeAuthor.author_copy_status.replace(/,/g, "").replace(/\.$/, "");
+      reply = `Hi ${getFirstName(activeAuthor.name)}! I checked your free author copies for "${activeAuthor.book_title}" and the status is ${cleanCopy} If you want to order extra copies you can get them at discounted author rates directly through your dashboard`;
       source = "database";
       confidence = 96;
     } else if (isPersonalQuery && !activeEmail) {
       reply =
-        "I can check your author copy shipment status! Could you share your registered email so I can look it up?";
+        "I can check your author copy shipment status! Could you share your registered email so I can look it up";
       confidence = 85;
     } else {
       reply = KNOWLEDGE_BASE.author_copies;
@@ -733,16 +735,17 @@ async function sendViaBuiltinKB(
   ) {
     intent = "addon_status";
     if (activeAuthor && activeAuthor.add_on_services?.length > 0) {
-      reply = `Hi ${getFirstName(activeAuthor.name)}! For your book "${activeAuthor.book_title}", you currently have these awesome add-ons active: ${activeAuthor.add_on_services.join(", ")}. If you'd like to add professional editing, cover design, or any of our marketing packages, just let me know and I'll help you set it up!`;
+      const cleanAddons = activeAuthor.add_on_services.join(" and ").replace(/,/g, "");
+      reply = `Hi ${getFirstName(activeAuthor.name)}! For your book "${activeAuthor.book_title}" you currently have these add-ons active: ${cleanAddons} If you want to add professional editing cover design or marketing packages just let me know and I'll help you set it up`;
       source = "database";
       confidence = 95;
     } else if (activeAuthor) {
-      reply = `Hi ${getFirstName(activeAuthor.name)}! It looks like you don't have any active add-on services for "${activeAuthor.book_title}" right now. If you're interested in professional editing, marketing campaigns, or premium cover design, feel free to request them before you approve the final proof!`;
+      reply = `Hi ${getFirstName(activeAuthor.name)}! It looks like you don't have any active add-on services for "${activeAuthor.book_title}" right now but if you're interested in professional editing marketing campaigns or premium cover design feel free to request them before you approve the final proof`;
       source = "database";
       confidence = 95;
     } else if (isPersonalQuery && !activeEmail) {
       reply =
-        "I can check your active add-on packages for you! Could you share your registered email so I can look them up?";
+        "I can check your active add-on packages for you! Could you share your registered email so I can look them up";
       confidence = 85;
     } else {
       reply = KNOWLEDGE_BASE.add_on_services;
@@ -766,15 +769,17 @@ async function sendViaBuiltinKB(
   ) {
     intent = "book_status";
     if (activeAuthor) {
-      reply = `Hi ${getFirstName(activeAuthor.name)}! Your book "${activeAuthor.book_title}" is currently in the ${activeAuthor.publishing_stage} stage. We received your final manuscript submission on ${activeAuthor.final_submission_date}.${activeAuthor.book_live_date ? ` We're working hard to get everything ready, and we expect your book to go live on Amazon, Flipkart, and the BookLeaf store by ${activeAuthor.book_live_date}!` : " Our team is reviewing the files and will update you on the next steps soon!"}`;
+      const cleanSubmission = activeAuthor.final_submission_date.replace(/,/g, "");
+      const cleanLive = activeAuthor.book_live_date ? activeAuthor.book_live_date.replace(/,/g, "") : null;
+      reply = `Hi ${getFirstName(activeAuthor.name)}! Your book "${activeAuthor.book_title}" is currently in the ${activeAuthor.publishing_stage} stage and we got your final manuscript submission on ${cleanSubmission}${cleanLive ? ` We're working hard to get everything ready and expect your book to go live on Amazon Flipkart and the BookLeaf store by ${cleanLive}` : " Our team is reviewing the files and we'll update you on the next steps very soon"}`;
       source = "database";
       confidence = 96;
     } else if (activeEmail) {
-      reply = `I couldn't find a publishing account under ${activeEmail}. Please check your registered email address or contact support@bookleafpub.com.`;
+      reply = `I couldn't find a publishing account under ${activeEmail} Could you double-check your registered email address or drop a line to support@bookleafpub.com`;
       confidence = 85;
     } else {
       reply =
-        "I can check your book's status for you! Could you share your registered email so I can look up your account?";
+        "I can check your book's status for you! Could you share your registered email so I can look up your account";
       confidence = 85;
     }
   }
@@ -835,21 +840,21 @@ async function sendViaBuiltinKB(
   // 19. Greeting
   else if (/^(hi|hello|hey|good morning|good evening)\b/.test(query.trim())) {
     intent = "general_info";
-    reply = `Hi there! 👋 I'm the BookLeaf support assistant. How can I help you with your publishing journey today?`;
+    reply = "Hi there! 👋 I'm the BookLeaf support assistant. How can I help you with your publishing journey today";
     confidence = 98;
   }
   // 20. Complaints
   else if (/\b(complaint|legal|lawyer|sue|harass|threat)\b/.test(query)) {
     intent = "general_info";
     reply =
-      "I'm sorry to hear that. Please email us directly at support@bookleafpub.com and a senior support manager will look into this for you right away.";
+      "I'm really sorry to hear that. Please email us at support@bookleafpub.com and a senior support manager will look into this for you right away";
     confidence = 60;
   }
   // Unmatched / Escalation
   else {
     intent = "general_info";
     reply =
-      "I'm not completely sure about that. I've shared your question with our support team, and you can also reach us directly at support@bookleafpub.com.";
+      "I'm not completely sure about that but I've shared your question with our support team so they can look into it. You can also reach us directly at support@bookleafpub.com";
     confidence = 35;
     source = "none";
   }
@@ -857,6 +862,22 @@ async function sendViaBuiltinKB(
   escalated = confidence < 80;
 
   return { reply, confidence, escalated, intent, matchedEmail: activeEmail, source, authorFound };
+}
+
+// ─── Universal Sanitizer for Human Tone ─────────────────────────────
+function sanitizeReplyForHumanTone(reply: string): string {
+  return reply
+    // Remove all commas
+    .replace(/,/g, "")
+    // Replace colons with a natural conversational transition
+    .replace(/:\s*/g, " is ")
+    // Remove semicolons
+    .replace(/;/g, "")
+    // Remove trailing periods to feel like a real text message
+    .replace(/\.$/, "")
+    // Clean up any double spaces created by replacements
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 // ─── Exported server function ────────────────────────────────────────
@@ -870,7 +891,9 @@ export const sendChat = createServerFn({ method: "POST" })
     // 1. Multiple Match Handling Guard
     if (validEmails.length > 1) {
       const multipleMatchResponse =
-        "I noticed multiple email addresses in your message. To make sure I access the right account, could you please specify which one is your registered author email?";
+        "I found a few email addresses in your message! To make sure I open the right account could you let me know which one is your registered author email?";
+
+      const cleanReply = sanitizeReplyForHumanTone(multipleMatchResponse);
 
       await logToSupportLogs({
         request_id: requestId,
@@ -881,11 +904,11 @@ export const sendChat = createServerFn({ method: "POST" })
         detected_intent: "multiple_matches",
         confidence: 80,
         escalated_status: false,
-        final_response: multipleMatchResponse,
+        final_response: cleanReply,
       });
 
       return {
-        reply: multipleMatchResponse,
+        reply: cleanReply,
         confidence: 80,
         intent: "multiple_matches",
         escalated: false,
@@ -941,7 +964,7 @@ export const sendChat = createServerFn({ method: "POST" })
     // Fallback response if all failed
     if (!finalResult) {
       const fallbackResponse =
-        "I'm having trouble processing this request right now. Please try again in a moment.";
+        "I'm having trouble connecting right now but I've passed this to our support team. Could you try again in a moment";
       finalResult = {
         reply: fallbackResponse,
         confidence: 30,
@@ -952,6 +975,8 @@ export const sendChat = createServerFn({ method: "POST" })
         authorFound: !!matchedEmail,
       };
     }
+
+    const cleanReply = sanitizeReplyForHumanTone(finalResult.reply);
 
     // 5. Update session memory if matched email changed or intent verified
     if (data.sessionId && finalResult.matchedEmail) {
@@ -973,12 +998,12 @@ export const sendChat = createServerFn({ method: "POST" })
       detected_intent: finalResult.intent,
       confidence: finalResult.confidence,
       escalated_status: finalResult.escalated,
-      final_response: finalResult.reply,
+      final_response: cleanReply,
     });
 
     // 7. Return exactly the required final response format
     return {
-      reply: finalResult.reply,
+      reply: cleanReply,
       confidence: finalResult.confidence,
       intent: finalResult.intent,
       escalated: finalResult.escalated,
