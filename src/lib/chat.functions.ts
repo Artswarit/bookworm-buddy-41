@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { createClient } from "@supabase/supabase-js";
+import { GoogleGenAI } from "@google/genai";
 
 /**
  * BookLeaf AI Author Support — Multi-channel-ready chat server function.
@@ -502,7 +503,7 @@ async function logToSupportLogs(log: {
   }
 }
 
-// ─── NLP Typo Normalizer ──────────────────────────────────────────────
+// ─── NLP Typo Normalizer (offline fallback) ───────────────────────────
 function cleanAndNormalizeQuery(query: string): {
   original: string;
   normalized: string;
@@ -512,38 +513,24 @@ function cleanAndNormalizeQuery(query: string): {
   const clean = query.trim().replace(/\s+/g, " ");
   let normalized = clean.toLowerCase();
 
-  // Typo Map for cleaning messy human input
+  // Typo Map for cleaning messy human input (offline fallback)
   const typoMap: Record<string, string> = {
-    whre: "where",
-    wher: "where",
-    wheere: "where",
-    bopok: "book",
-    boook: "book",
-    bok: "book",
-    bokk: "book",
-    roylty: "royalty",
-    royality: "royalty",
-    roylties: "royalty",
-    royaltys: "royalty",
-    maiil: "mail",
-    emial: "email",
-    emaill: "email",
-    mial: "email",
-    statis: "status",
-    stutus: "status",
-    statuss: "status",
-    stats: "status",
-    copi: "copy",
-    copis: "copies",
-    isnb: "isbn",
-    ibsn: "isbn",
-    delivred: "delivered",
-    deliverd: "delivered",
-    delivry: "delivery",
-    dashbord: "dashboard",
-    dashboad: "dashboard",
-    statge: "stage",
-    stge: "stage",
+    whre: "where", wher: "where", wheere: "where",
+    bopok: "book", boook: "book", bok: "book", bokk: "book",
+    roylty: "royalty", royality: "royalty", roylties: "royalty", royaltys: "royalty",
+    maiil: "mail", emial: "email", emaill: "email", mial: "email",
+    statis: "status", stutus: "status", statuss: "status", stats: "status",
+    copi: "copy", copis: "copies",
+    isnb: "isbn", ibsn: "isbn",
+    delivred: "delivered", deliverd: "delivered", delivry: "delivery",
+    dashbord: "dashboard", dashboad: "dashboard",
+    statge: "stage", stge: "stage",
+    publsh: "publish", publsih: "publish", publsihing: "publishing",
+    paymnt: "payment", payemnt: "payment", pament: "payment",
+    rveiw: "review", reveiw: "review",
+    auhtor: "author", authro: "author", athor: "author",
+    pric: "price", pirce: "price",
+    halp: "help", hlep: "help", helo: "hello",
   };
 
   normalized = normalized.replace(/\b\w+\b/g, (match) => {
@@ -555,6 +542,74 @@ function cleanAndNormalizeQuery(query: string): {
   const uniqueEmails = Array.from(new Set(emails.map((e) => e.toLowerCase().trim())));
 
   return { original, normalized, emails: uniqueEmails };
+}
+
+// ─── Gemini AI Smart Preprocessor ─────────────────────────────────────
+interface GeminiPreprocessResult {
+  correctedQuery: string;
+  extractedIntent: string | null;
+  extractedEmail: string | null;
+  extractedName: string | null;
+  isGreeting: boolean;
+}
+
+async function geminiPreprocess(
+  rawMessage: string,
+  history: Array<{ role: string; content: string }>,
+): Promise<GeminiPreprocessResult | null> {
+  const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
+  if (!apiKey) {
+    console.log("[Gemini] No API key found. Skipping AI preprocessing.");
+    return null;
+  }
+
+  try {
+    const ai = new GoogleGenAI({ apiKey });
+    const conversationContext = history
+      .slice(-6)
+      .map((m) => `${m.role}: ${m.content}`)
+      .join("\n");
+
+    const prompt = `You are a smart query preprocessor for BookLeaf Publishing's author support chatbot.
+
+Your job is to take a user's raw messy input and return a clean JSON object.
+
+Context of the conversation so far:
+${conversationContext || "(new conversation)"}
+
+The user just typed: "${rawMessage}"
+
+Do the following:
+1. Fix all spelling mistakes and typos
+2. Identify the core intent from this list: greeting, book_status, royalty, isbn, author_copies, publishing_timeline, add_on_services, bestseller_package, pr_campaign, dashboard, sales_reports, distribution, copyright, pen_name, refund, contact, complaint, introduction, unknown
+3. Extract any email address if present
+4. Extract the user's name if they introduce themselves
+5. Determine if this is a greeting or casual hello
+
+IMPORTANT: If the message is clearly a follow-up referencing previous conversation context (like just saying "status" or "publish" after providing an email) then use the conversation history to understand what they mean and set the correctedQuery to a complete sentence.
+
+Return ONLY valid JSON with no markdown formatting:
+{"correctedQuery": "the cleaned up version of what the user meant", "extractedIntent": "one of the intents above or null", "extractedEmail": "email@example.com or null", "extractedName": "their name or null", "isGreeting": true/false}`;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: prompt,
+      config: {
+        temperature: 0.1,
+        maxOutputTokens: 200,
+      },
+    });
+
+    const text = response.text?.trim() || "";
+    // Strip markdown code fences if Gemini wraps the response
+    const jsonStr = text.replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/i, "").trim();
+    const parsed = JSON.parse(jsonStr) as GeminiPreprocessResult;
+    console.log("[Gemini] Preprocessed:", parsed);
+    return parsed;
+  } catch (err) {
+    console.warn("[Gemini] Preprocessing failed (falling back to offline):", err);
+    return null;
+  }
 }
 
 // ─── Built-in KB fallback (always works, no external deps) ───────────
@@ -903,8 +958,25 @@ export const sendChat = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => chatSchema.parse(input))
   .handler(async ({ data }) => {
     const requestId = "BL-" + Math.random().toString(36).substring(2, 7).toUpperCase();
-    const { original, normalized, emails } = cleanAndNormalizeQuery(data.message);
+
+    // ─── Gemini AI Smart Preprocessing ──────────────────────────
+    const geminiResult = await geminiPreprocess(data.message, data.history || []);
+    const preprocessedMessage = geminiResult?.correctedQuery || data.message;
+    console.log(`[sendChat] Original: "${data.message}" → Preprocessed: "${preprocessedMessage}"`);
+
+    // Overwrite data.message with the AI-corrected version for all downstream strategies
+    const enhancedData = { ...data, message: preprocessedMessage };
+
+    const { original, normalized, emails } = cleanAndNormalizeQuery(preprocessedMessage);
     const validEmails = emails.filter(isValidAuthorEmail);
+
+    // If Gemini extracted an email that regex missed, inject it
+    if (geminiResult?.extractedEmail && !validEmails.includes(geminiResult.extractedEmail.toLowerCase())) {
+      const geminiEmail = geminiResult.extractedEmail.toLowerCase();
+      if (isValidAuthorEmail(geminiEmail)) {
+        validEmails.push(geminiEmail);
+      }
+    }
 
     // 1. Multiple Match Handling Guard
     if (validEmails.length > 1) {
@@ -951,16 +1023,16 @@ export const sendChat = createServerFn({ method: "POST" })
       }
     }
 
-    // 4. Routing strategies
+    // 4. Routing strategies (using enhanced/cleaned message)
     const strategies: Array<{ name: string; fn: () => Promise<ChatResult> }> = [];
     if (process.env.N8N_WEBHOOK_URL || process.env.VITE_N8N_WEBHOOK_URL)
       strategies.push({
         name: "n8n-webhook",
-        fn: () => sendViaN8nWebhook(data, matchedEmail),
+        fn: () => sendViaN8nWebhook(enhancedData, matchedEmail),
       });
     if (process.env.N8N_MCP_BEARER_TOKEN)
-      strategies.push({ name: "n8n-mcp", fn: () => sendViaN8nMcp(data, matchedEmail) });
-    strategies.push({ name: "built-in-kb", fn: () => sendViaBuiltinKB(data, matchedEmail) });
+      strategies.push({ name: "n8n-mcp", fn: () => sendViaN8nMcp(enhancedData, matchedEmail) });
+    strategies.push({ name: "built-in-kb", fn: () => sendViaBuiltinKB(enhancedData, matchedEmail) });
 
     let finalResult: ChatResult | null = null;
     for (const { name, fn } of strategies) {
