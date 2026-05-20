@@ -49,6 +49,16 @@ function ChatPage() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [sessionId, setSessionId] = useState<string>("");
+
+  useEffect(() => {
+    let id = localStorage.getItem("bookleaf_chat_session_id");
+    if (!id) {
+      id = "session-" + Math.random().toString(36).substring(2, 15) + "-" + Date.now();
+      localStorage.setItem("bookleaf_chat_session_id", id);
+    }
+    setSessionId(id);
+  }, []);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({
@@ -75,6 +85,7 @@ function ChatPage() {
         data: {
           message: text,
           history: messages.map((m) => ({ role: m.role, content: m.content })),
+          sessionId: sessionId,
         },
       });
       setMessages((prev) => [
@@ -87,8 +98,8 @@ function ChatPage() {
           timestamp: Date.now(),
         },
       ]);
-    } catch (err: any) {
-      const isAbort = err?.name === "AbortError";
+    } catch (err: unknown) {
+      const isAbort = err instanceof Error && err.name === "AbortError";
       setMessages((prev) => [
         ...prev,
         {

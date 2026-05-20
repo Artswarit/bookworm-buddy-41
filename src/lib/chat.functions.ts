@@ -14,6 +14,7 @@ const chatSchema = z.object({
     .array(z.object({ role: z.enum(["user", "assistant"]), content: z.string() }))
     .max(20)
     .default([]),
+  sessionId: z.string().optional(),
 });
 
 type ChatResult = {
@@ -29,47 +30,59 @@ type ChatResult = {
 // ─── Knowledge Base (all assignment-required topics) ─────────────────
 const KNOWLEDGE_BASE: Record<string, string> = {
   publishing_timeline:
-    "The publishing process usually takes about 45 to 60 days. First, your manuscript is reviewed (1 to 2 weeks), then it goes into editing, typesetting, and cover design (3 to 4 weeks). After that, you'll get a final proof to review. Once you approve it, your book will go live on Amazon, Flipkart, and our website within 7 days. Your author copies will ship within a week after that.",
+    "Our publishing process usually takes about 45 to 60 days from start to finish. We'll start with a manuscript review which takes 1 to 2 weeks. After that, we'll dive into editing, cover design, and formatting, which takes about 3 to 4 weeks. Once you give us the green light on the final proof, your book will go live on the stores within 7 days!",
   royalty_policy:
-    "Royalties are calculated monthly and paid by bank transfer, usually by the 28th of the following month. For print books, you receive 10% of the MRP, and for eBooks, it's 25% of the MRP. Payouts start once you reach a minimum of 500 rupees. You'll receive a royalty statement by email before each payment, and your first cycle starts 6 months after your book goes live.",
+    "Royalties are calculated every month and sent over via bank transfer by the 28th. You'll receive 10% of the price for printed paperback copies and 25% for eBooks. This begins 6 months after your book goes live, as long as you've crossed the 500 rupees minimum threshold.",
   isbn_info:
-    "We provide a free ISBN during the production stage, which will appear on your back cover and listings on Amazon and Flipkart. There is nothing you need to do on your end. Just a heads up, BookLeaf ISBNs can't be used for KDP or other self-publishing platforms.",
+    "Don't worry about the ISBN! We've got you covered. We provide a free ISBN during the production stage, and it will be placed on your book's back cover and retail pages automatically.",
   author_copies:
-    "Every author gets 2 free paperback copies once their book is published. If you want to order more, you can get them at the special author price directly from your dashboard. These copies usually ship within 7 days of your book going live.",
+    "We'll send you 2 free paperback copies of your book as soon as it's published! If you ever need more copies, you can order them at a special author discount right from your author dashboard.",
   add_on_services:
-    "We offer several add-ons like editing, premium cover design, marketing packages, audiobooks, and translation. You can add these to your project anytime before your book enters the final proofing stage.",
+    "We offer quite a few great add-ons like professional editing, custom cover designs, marketing campaigns, and audiobook production. Feel free to request any of these before you approve your final book proof.",
   bestseller_package:
-    "Our Bestseller Package includes an Amazon bestseller campaign across 3 categories with a 48 to 72 hour launch window, social media promotion, and a bestseller certificate. This campaign usually runs 30 to 45 days after your book goes live. Please keep in mind that we can't guarantee specific rankings or sales numbers.",
-  dashboard:
-    "You can log into your dashboard at dashboard.bookleafpub.com using your registered email and a one-time passcode. From there, you'll be able to track your book's status, sales data, royalties, and add-on services. If you have any trouble logging in, please email support@bookleafpub.com.",
-  password_reset:
-    "We use one-time passcodes (OTP) for login, so there is no password to reset. Just go to dashboard.bookleafpub.com and enter your registered email to get a login code. If you don't receive the OTP, please check your spam folder or reach out to support@bookleafpub.com.",
-  sales_reports:
-    "You can find your sales reports on the dashboard under the Sales tab. The sales data updates weekly and breaks down sales by platforms like Amazon, Flipkart, and our website. Log in at dashboard.bookleafpub.com to check them out.",
-  distribution:
-    "We distribute books across Amazon India, Amazon Global, Flipkart, and the BookLeaf website. International distribution is also available for select titles. Please note that offline bookstore placement is not something we can guarantee.",
-  amazon_availability:
-    "Your book will be listed on Amazon, Flipkart, and bookleafpub.com within 7 days of going live. Amazon Prime eligibility depends entirely on Amazon's criteria, so that is not something we can guarantee.",
-  copyright:
-    "You always keep the copyright and full creative ownership of your work. We only hold non-exclusive publishing and distribution rights as detailed in your agreement.",
-  pen_name:
-    "Yes, you can absolutely publish under a pen name! Just let our team know during the manuscript review stage. We'll make sure it appears on the cover, Amazon, Flipkart, and all other distribution channels.",
-  refund_policy:
-    "Refund options depend on where your book is in the process. If work hasn't started yet, a refund may be possible. Once the book enters production, we generally can't offer refunds. Please email support@bookleafpub.com with your details if you have any questions.",
-  award_submission:
-    "We submit eligible books to 5 to 10 literary awards that match your genre. These submissions go out within 60 days of your book going live. Award results depend on each organization's timeline and are not guaranteed.",
+    "Our Bestseller Package is designed to give your book a strong start. We run a targeted Amazon campaign across 3 relevant categories within a 48 to 72 hour launch window, plus we promote it on our social media. We usually kick this off about 30 to 45 days after your book goes live. While we do our absolute best, we can't guarantee a specific sales rank.",
   pr_campaign:
-    "Our PR Campaign includes a press release sent to over 50 media outlets, outreach to bloggers and influencers, and a featured author interview on our blog. The campaign usually runs for 2 to 4 weeks after activation.",
+    "Our PR Campaign is designed to get your book featured in online news portals and media outlets to boost visibility. We handle everything from writing the press release to distributing it. If you'd like to get started with this, let our support team know!",
+  dashboard:
+    "You can log in to your dashboard anytime at dashboard.bookleafpub.com. Just enter your registered email address to receive a secure one-time login code. If you have any trouble getting in, just drop us an email at support@bookleafpub.com and we'll help you out!",
+  password_reset:
+    "To keep things simple and secure, we use one-time passcodes sent directly to your registered email instead of traditional passwords. That means there's no password to remember or reset! Just head over to dashboard.bookleafpub.com and enter your email to get your login code.",
+  sales_reports:
+    "You can track your sales anytime on the Sales tab of your author dashboard. The data updates once a week and covers all sales from Amazon, Flipkart, and the BookLeaf store.",
+  distribution:
+    "We distribute your book across Amazon India, Amazon Global, Flipkart, and the BookLeaf bookstore. Please keep in mind that we don't handle offline bookstore placement.",
+  amazon_availability:
+    "Your book will be listed on Amazon, Flipkart, and the BookLeaf store within 7 days of going live. Prime eligibility depends entirely on Amazon's fulfillment centers, so it's not something we can guarantee ourselves.",
+  copyright:
+    "You retain 100% of the copyright and creative ownership of your work! We only hold non-exclusive distribution rights as outlined in our publishing agreement.",
+  pen_name:
+    "Yes, you can absolutely publish under a pen name! Just let our editorial team know during the manuscript review stage so we can set it up correctly on the retail sites and your book cover.",
+  refund_policy:
+    "We can issue a full refund as long as production work hasn't started yet. Once our team begins working on your book, we won't be able to process a refund. If you have any specific questions about your order, please email us at support@bookleafpub.com.",
   writing_challenge:
-    "We host writing challenges and contests for aspiring authors from time to time. We announce all the details on our website and social media. Winners can receive publishing packages or mentorship opportunities.",
+    "We love hosting writing contests and challenges! You can find all the details, guidelines, and updates for our upcoming challenges on our website and social channels.",
   support_limitations:
-    "We provide customer support by email at support@bookleafpub.com. Phone calls, video calls, or in-person meetings are not available right now. You can expect a reply within 24 to 48 business hours.",
+    "We provide all of our support directly over email at support@bookleafpub.com. We aren't able to offer phone or video calls at the moment, but our team works hard to reply to every email within 24 to 48 business hours.",
   contact:
-    "You can reach us at info@bookleafpub.com for general questions, or support@bookleafpub.com for support. Our office is located at New Airport Road, ParrayPora, Srinagar, J&K 190005.",
+    "You can always reach us at support@bookleafpub.com for help with your book, or info@bookleafpub.com for general inquiries. Our main office is located on New Airport Road, Srinagar, J&K 190005.",
 };
 
+interface Author {
+  email: string;
+  name: string;
+  book_title: string;
+  isbn: string;
+  final_submission_date: string;
+  book_live_date: string | null;
+  royalty_status: string;
+  add_on_services: string[];
+  author_copy_status: string;
+  publishing_stage: string;
+  dashboard_access: string;
+}
+
 // ─── Mocked Author Database ──────────────────────────────────────────
-const MOCK_AUTHORS: Record<string, any> = {
+const MOCK_AUTHORS: Record<string, Author> = {
   "priya.sharma@gmail.com": {
     email: "priya.sharma@gmail.com",
     name: "Priya Sharma",
@@ -157,14 +170,13 @@ async function sendViaN8nWebhook(
     const text = await res.text();
     if (!text || text.trim().length === 0) throw new Error("N8N_EMPTY_RESPONSE");
     const json = JSON.parse(text);
-    // Handle both { reply } and { message } response formats
     const reply = String(json.reply ?? json.message ?? "");
     if (!reply) throw new Error("N8N_NO_REPLY");
     return {
       reply,
       confidence: Number(json.confidence ?? 0),
       escalated: Boolean(json.escalated ?? true),
-      intent: String(json.intent ?? "other"),
+      intent: String(json.intent ?? "general_info"),
       matchedEmail: json.matched_email ?? json.author_email ?? null,
       source: normalizeSource(json.data_source),
       authorFound: json.data_source === "database" || json.data_source === "supabase_live",
@@ -175,12 +187,23 @@ async function sendViaN8nWebhook(
 }
 
 // ─── n8n MCP path (JSON-RPC over Streamable HTTP) ────────────────────
+interface McpCallResponse {
+  result?: {
+    structuredContent?: {
+      executionId?: string;
+    };
+    content?: Array<{
+      text?: string;
+    }>;
+  };
+}
+
 async function mcpCall(
   token: string,
   method: string,
   params: Record<string, unknown>,
   signal?: AbortSignal,
-): Promise<any> {
+): Promise<McpCallResponse> {
   const res = await fetch("https://ashwarit.app.n8n.cloud/mcp-server/http", {
     method: "POST",
     headers: {
@@ -199,7 +222,7 @@ async function mcpCall(
     .map((l: string) => l.slice(6))
     .join("");
   if (!jsonStr) throw new Error("MCP_EMPTY_SSE");
-  return JSON.parse(jsonStr);
+  return JSON.parse(jsonStr) as McpCallResponse;
 }
 
 async function sendViaN8nMcp(
@@ -247,15 +270,41 @@ async function sendViaN8nMcp(
       );
       const pollText = poll?.result?.content?.[0]?.text;
       if (!pollText) continue;
-      let execData: any;
+
+      interface ExecNodeOutput {
+        reply?: string;
+        message?: string;
+        status?: string;
+        confidence?: number;
+        escalated?: boolean;
+        intent?: string;
+        matched_email?: string;
+        data_source?: string;
+      }
+      interface ExecRun {
+        data?: {
+          main?: Array<Array<{ json?: ExecNodeOutput }>>;
+        };
+      }
+      interface ExecData {
+        status?: string;
+        data?: {
+          status?: string;
+          resultData?: {
+            runData?: Record<string, ExecRun[]>;
+          };
+        };
+      }
+
+      let execData: ExecData | null = null;
       try {
-        execData = JSON.parse(pollText);
+        execData = JSON.parse(pollText) as ExecData;
       } catch {
         continue;
       }
-      const status = execData?.status ?? execData?.data?.status;
+      const status = execData.status ?? execData.data?.status;
       if (status === "running" || status === "waiting") continue;
-      const runData = execData?.data?.resultData?.runData ?? {};
+      const runData = execData.data?.resultData?.runData ?? {};
       for (const nodeName of [
         "14 - Send HTTP Response",
         "12 - Build Final Response",
@@ -272,7 +321,7 @@ async function sendViaN8nMcp(
             reply: String(output.reply ?? output.message ?? ""),
             confidence: Number(output.confidence ?? 0),
             escalated: Boolean(output.escalated ?? true),
-            intent: String(output.intent ?? "other"),
+            intent: String(output.intent ?? "general_info"),
             matchedEmail: output.matched_email ?? null,
             source: normalizeSource(output.data_source),
             authorFound:
@@ -289,9 +338,16 @@ async function sendViaN8nMcp(
   }
 }
 
-// ─── Supabase & local fallback lookups ─────────────────────────────────
+// ─── Helpers ─────────────────────────────────────────────────────────
+function normalizeSource(s: unknown): "database" | "knowledge_base" | "none" {
+  const v = String(s ?? "none");
+  if (v === "database" || v === "supabase_live" || v === "db_record") return "database";
+  if (v === "knowledge_base") return "knowledge_base";
+  return "none";
+}
 
-async function lookupAuthor(email: string): Promise<any> {
+// ─── Supabase & local fallback lookups ─────────────────────────────────
+async function lookupAuthor(email: string): Promise<Author | null> {
   const cleanEmail = email.toLowerCase().trim();
 
   try {
@@ -316,6 +372,7 @@ async function lookupAuthor(email: string): Promise<any> {
           book_live_date: data.book_live_date || null,
           royalty_status: data.royalty_status || "No royalty details yet.",
           add_on_services: Array.isArray(data.add_on_services) ? data.add_on_services : [],
+          author_copy_status: data.author_copy_status || "Not shipped yet.",
           publishing_stage: data.publishing_stage || "Manuscript Review",
           dashboard_access: data.dashboard_access || "Active",
         };
@@ -327,43 +384,6 @@ async function lookupAuthor(email: string): Promise<any> {
 
   return MOCK_AUTHORS[cleanEmail] ?? null;
 }
-
-async function logQueryToSupabase(
-  userQuery: string,
-  detectedIntent: string,
-  matchedEmail: string | null,
-  botResponse: string,
-  confidenceScore: number,
-  escalated: boolean,
-) {
-  try {
-    const sbUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
-    const sbKey = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-    if (sbUrl && sbKey) {
-      await fetch(`${sbUrl}/rest/v1/query_logs`, {
-        method: "POST",
-        headers: {
-          apikey: sbKey,
-          Authorization: `Bearer ${sbKey}`,
-          "Content-Type": "application/json",
-          Prefer: "return=minimal",
-        },
-        body: JSON.stringify({
-          user_query: userQuery,
-          detected_intent: detectedIntent,
-          matched_email: matchedEmail,
-          bot_response: botResponse,
-          confidence_score: confidenceScore,
-          escalated,
-        }),
-      }).catch(() => {});
-    }
-  } catch {
-    /* logging is best-effort */
-  }
-}
-
-// ─── Built-in KB fallback (always works, no external deps) ───────────
 
 // Support/system emails that must NEVER be used as author identity
 const SYSTEM_EMAILS = new Set([
@@ -381,72 +401,208 @@ function isValidAuthorEmail(email: string): boolean {
   );
 }
 
-async function sendViaBuiltinKB(data: z.infer<typeof chatSchema>): Promise<ChatResult> {
-  const query = data.message.toLowerCase();
+// ─── Session Memory Helpers ───────────────────────────────────────────
+async function lookupSessionEmail(sessionId: string): Promise<string | null> {
+  try {
+    const sbUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
+    const sbKey = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    if (sbUrl && sbKey) {
+      const supabase = createClient(sbUrl, sbKey);
+      const { data, error } = await supabase
+        .from("chat_sessions")
+        .select("verified_email")
+        .eq("session_id", sessionId)
+        .maybeSingle();
 
-  // ── Email extraction: ONLY from user messages, never from bot responses ──
-  const emailRe = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-
-  // 1. Scan for any verified author in current message or history first (never overwrite verified with invalid/support)
-  let activeEmail: string | null = null;
-  let activeAuthor: any = null;
-
-  const currentEmails = data.message.match(emailRe) ?? [];
-  for (const e of currentEmails) {
-    if (isValidAuthorEmail(e)) {
-      const author = await lookupAuthor(e);
-      if (author) {
-        activeEmail = e.toLowerCase();
-        activeAuthor = author;
-        break;
+      if (!error && data) {
+        return data.verified_email || null;
       }
     }
+  } catch (err) {
+    console.warn(`[lookupSessionEmail failed]:`, err);
+  }
+  return null;
+}
+
+async function saveSessionEmail(
+  sessionId: string,
+  email: string,
+  intent: string,
+  query: string,
+): Promise<void> {
+  try {
+    const sbUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
+    const sbKey = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    if (sbUrl && sbKey) {
+      const supabase = createClient(sbUrl, sbKey);
+      const { error } = await supabase.from("chat_sessions").upsert({
+        session_id: sessionId,
+        verified_email: email,
+        last_intent: intent,
+        last_query: query,
+        timestamp: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+      if (error) {
+        console.warn("[saveSessionEmail error]:", error.message);
+      }
+    }
+  } catch (err) {
+    console.warn(`[saveSessionEmail failed]:`, err);
+  }
+}
+
+// ─── Support logs Logging Helper ──────────────────────────────────────
+async function logToSupportLogs(log: {
+  request_id: string;
+  session_id?: string;
+  original_query: string;
+  normalized_query: string;
+  extracted_email?: string | null;
+  detected_intent: string;
+  confidence: number;
+  escalated_status: boolean;
+  final_response: string;
+}): Promise<void> {
+  try {
+    const sbUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
+    const sbKey = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    if (sbUrl && sbKey) {
+      const supabase = createClient(sbUrl, sbKey);
+      const { error } = await supabase.from("support_logs").insert({
+        request_id: log.request_id,
+        session_id: log.session_id || null,
+        original_query: log.original_query,
+        normalized_query: log.normalized_query,
+        extracted_email: log.extracted_email || null,
+        detected_intent: log.detected_intent,
+        confidence: log.confidence,
+        escalated_status: log.escalated_status,
+        final_response: log.final_response,
+        timestamp: new Date().toISOString(),
+      });
+      if (error) {
+        console.warn("[logToSupportLogs error]:", error.message);
+      }
+    }
+  } catch (err) {
+    console.warn(`[logToSupportLogs failed]:`, err);
+  }
+}
+
+// ─── NLP Typo Normalizer ──────────────────────────────────────────────
+function cleanAndNormalizeQuery(query: string): {
+  original: string;
+  normalized: string;
+  emails: string[];
+} {
+  const original = query;
+  const clean = query.trim().replace(/\s+/g, " ");
+  let normalized = clean.toLowerCase();
+
+  // Typo Map for cleaning messy human input
+  const typoMap: Record<string, string> = {
+    whre: "where",
+    wher: "where",
+    wheere: "where",
+    bopok: "book",
+    boook: "book",
+    bok: "book",
+    bokk: "book",
+    roylty: "royalty",
+    royality: "royalty",
+    roylties: "royalty",
+    royaltys: "royalty",
+    maiil: "mail",
+    emial: "email",
+    emaill: "email",
+    mial: "email",
+    statis: "status",
+    stutus: "status",
+    statuss: "status",
+    stats: "status",
+    copi: "copy",
+    copis: "copies",
+    isnb: "isbn",
+    ibsn: "isbn",
+    delivred: "delivered",
+    deliverd: "delivered",
+    delivry: "delivery",
+    dashbord: "dashboard",
+    dashboad: "dashboard",
+    statge: "stage",
+    stge: "stage",
+  };
+
+  normalized = normalized.replace(/\b\w+\b/g, (match) => {
+    return typoMap[match] ?? match;
+  });
+
+  const emailRe = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+  const emails = original.match(emailRe) ?? [];
+  const uniqueEmails = Array.from(new Set(emails.map((e) => e.toLowerCase().trim())));
+
+  return { original, normalized, emails: uniqueEmails };
+}
+
+// ─── Built-in KB fallback (always works, no external deps) ───────────
+async function sendViaBuiltinKB(
+  data: z.infer<typeof chatSchema>,
+  matchedEmail: string | null,
+): Promise<ChatResult> {
+  const { original, normalized, emails } = cleanAndNormalizeQuery(data.message);
+
+  // 1. Guard against multiple match emails in query
+  const validEmails = emails.filter(isValidAuthorEmail);
+  if (validEmails.length > 1) {
+    return {
+      reply:
+        "I noticed multiple email addresses in your message. To make sure I access the right account, could you please specify which one is your registered author email?",
+      confidence: 80,
+      escalated: false,
+      intent: "multiple_matches",
+      matchedEmail: null,
+      source: "none",
+      authorFound: false,
+    };
   }
 
+  // Active email matching
+  let activeEmail = matchedEmail;
+  if (!activeEmail && validEmails.length === 1) {
+    activeEmail = validEmails[0];
+  }
+
+  // Look in history for valid email if none active
   if (!activeEmail) {
     for (const msg of data.history) {
       if (msg.role !== "user") continue;
-      const matches = msg.content.match(emailRe) ?? [];
-      for (const e of matches) {
-        if (isValidAuthorEmail(e)) {
-          const author = await lookupAuthor(e);
-          if (author) {
-            activeEmail = e.toLowerCase();
-            activeAuthor = author;
-            break;
-          }
-        }
-      }
-      if (activeAuthor) break;
-    }
-  }
-
-  // 2. If no verified author found, fallback to any valid-looking email in current message or history
-  if (!activeEmail) {
-    for (const e of currentEmails) {
-      if (isValidAuthorEmail(e)) {
-        activeEmail = e.toLowerCase();
+      const historyEmails =
+        msg.content.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g) ?? [];
+      const historyValids = historyEmails.filter(isValidAuthorEmail);
+      if (historyValids.length === 1) {
+        activeEmail = historyValids[0].toLowerCase();
         break;
       }
     }
-    if (!activeEmail) {
-      for (const msg of data.history) {
-        if (msg.role !== "user") continue;
-        const matches = msg.content.match(emailRe) ?? [];
-        for (const e of matches) {
-          if (isValidAuthorEmail(e)) {
-            activeEmail = e.toLowerCase();
-            break;
-          }
-        }
-        if (activeEmail) break;
-      }
-    }
   }
 
-  // ── Helper: is this a personal/possessive query requiring author identity? ──
+  let activeAuthor: Author | null = null;
+  if (activeEmail) {
+    activeAuthor = await lookupAuthor(activeEmail);
+  }
+
+  const getFirstName = (fullName: string) => {
+    return fullName.split(" ")[0] || fullName;
+  };
+
+  const query = normalized;
+
+  // Personal context check (English + Hinglish)
   const isPersonalQuery =
-    /\b(my |i have|i got|where.s my|what.s my|check my|show my|give me my)\b/i.test(data.message);
+    /\b(my|i have|i got|where.s my|what.s my|check my|show my|give me my|mera|meri|mujhe|apne)\b/i.test(
+      original,
+    ) || /\b(kab|kaha|status|stage|royalty)\b/i.test(query);
 
   let intent = "";
   let reply = "";
@@ -455,35 +611,31 @@ async function sendViaBuiltinKB(data: z.infer<typeof chatSchema>): Promise<ChatR
   let authorFound = !!activeAuthor;
   let escalated = false;
 
-  // ── Intent matching (ordered by specificity) ──
-
-  // ── Email-only & Invalid Email matchers ──
-  const trimmed = data.message.trim();
+  // Email submission handler
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const isEmailOnly = emailRegex.test(trimmed);
+  const isEmailOnly = emailRegex.test(original.trim());
   const hasAtButInvalid =
-    trimmed.includes("@") && !isEmailOnly && trimmed.split(/\s+/).length === 1;
+    original.trim().includes("@") && !isEmailOnly && original.trim().split(/\s+/).length === 1;
 
   if (isEmailOnly) {
     intent = "email_submission";
-    const author = await lookupAuthor(trimmed);
+    const author = await lookupAuthor(original.trim());
     if (author) {
-      reply = `Thanks ${author.name}. I found your author profile. How can I help you today?`;
+      reply = `Thanks ${getFirstName(author.name)}! I found your profile. How can I help you today?`;
       confidence = 100;
       escalated = false;
       authorFound = true;
       source = "database";
-      activeEmail = trimmed.toLowerCase();
-      activeAuthor = author;
+      activeEmail = original.trim().toLowerCase();
     } else {
-      reply = "I couldn’t find an author account linked to this email. Please check and try again.";
+      reply =
+        "I couldn't find an author account linked to this email. Please check the spelling or registered email address and try again.";
       confidence = 85;
       escalated = false;
       authorFound = false;
       source = "none";
-      activeEmail = trimmed.toLowerCase();
+      activeEmail = original.trim().toLowerCase();
     }
-    await logQueryToSupabase(data.message, intent, activeEmail, reply, confidence, escalated);
     return { reply, confidence, escalated, intent, matchedEmail: activeEmail, source, authorFound };
   } else if (hasAtButInvalid) {
     intent = "email_invalid";
@@ -492,260 +644,273 @@ async function sendViaBuiltinKB(data: z.infer<typeof chatSchema>): Promise<ChatR
     escalated = false;
     authorFound = false;
     source = "none";
-    await logQueryToSupabase(data.message, intent, activeEmail, reply, confidence, escalated);
     return { reply, confidence, escalated, intent, matchedEmail: activeEmail, source, authorFound };
   }
 
-  // ── Off-topic check ──
+  // Off-topic check
   else if (
     /\b(joke|riddle|bake|cake|recipe|cook|food|chocolate|ipl|cricket|sports|football|won.*match|game|score|weather|temperature|rain|sun|joke|funny|movie|song|music|singer)\b/i.test(
-      query,
+      original,
     )
   ) {
-    intent = "off_topic";
+    intent = "general_info";
     reply =
-      "That doesn’t seem related to BookLeaf publishing support, so I’ve shared it with our support team.";
-    confidence = 30;
-    escalated = true;
+      "That doesn't seem related to BookLeaf publishing support. How can I help you with your book instead?";
+    confidence = 85;
+    escalated = false;
     source = "none";
   }
 
-  // Awards (check before book status — "guarantee book win award")
-  else if (/\b(award|literary prize|nomination|win.*award|guarantee.*award)\b/.test(query)) {
-    intent = "award_submission";
-    reply = KNOWLEDGE_BASE.award_submission;
-  }
-  // Book status / "is my book live" (must have book-related keyword)
+  // Intent checks
+  // 1. Publishing timeline (Hinglish/English)
   else if (
-    /\b(book.*(live|status|stage|progress|ready)|is.*book.*live|where.*my.*book|my book.*(status|stage))\b/.test(
+    /\b(timeline|how long|how much time|process|stages|publishing take|kitna time|kitne din|days|din lagenge|kab tak|kab hoga)\b/.test(
       query,
     )
   ) {
-    intent = "publishing_stage";
+    intent = "publishing_timeline";
+    reply = KNOWLEDGE_BASE.publishing_timeline;
+  }
+  // 2. Royalty (Hinglish/English)
+  else if (
+    /\b(royalt|payment|paid|earning|when.*get.*money|paisa|rupee|earning|milega|milegi|milenge|rupay|rupya)\b/.test(
+      query,
+    )
+  ) {
+    intent = "royalty";
     if (activeAuthor) {
-      reply = `Hey ${activeAuthor.name}! Your book "${activeAuthor.book_title}" is in the ${activeAuthor.publishing_stage} stage. It was submitted on ${activeAuthor.final_submission_date}${activeAuthor.book_live_date ? `, and we expect it to go live by ${activeAuthor.book_live_date}` : ""}.`;
+      reply = `Hi ${getFirstName(activeAuthor.name)}! I checked your account for "${activeAuthor.book_title}" and here is your royalty status: ${activeAuthor.royalty_status}. Just a quick reminder, monthly statements are sent to your email and payments are processed by the 28th of each month.`;
       source = "database";
-      authorFound = true;
       confidence = 96;
     } else if (activeEmail) {
-      reply = `I couldn't find an account for ${activeEmail}. Could you check if that's the email you registered with? You can also reach us at support@bookleafpub.com.`;
-      confidence = 60;
-    } else {
-      reply =
-        "I can definitely check your book's status for you! Could you share your registered email so I can look up your account?";
+      reply = `I couldn't find a publishing account under ${activeEmail}. Please check your registered email address or contact support@bookleafpub.com.`;
       confidence = 85;
-    }
-  }
-  // Royalties
-  else if (/\b(royalt|payment|paid|earning|when.*get.*money)/i.test(query)) {
-    intent = "royalty_status";
-    if (activeAuthor) {
-      reply = `Hey ${activeAuthor.name}! Regarding royalties for "${activeAuthor.book_title}": ${activeAuthor.royalty_status} As a quick reminder, royalties are calculated monthly and usually paid by the 28th of the following month.`;
-      source = "database";
-      authorFound = true;
-      confidence = 95;
-    } else if (activeEmail) {
-      reply = `I couldn't find an account for ${activeEmail}. Could you check that email? You can also reach us at support@bookleafpub.com.`;
-      confidence = 60;
     } else if (isPersonalQuery) {
       reply =
-        "I can check your royalty details for you! Could you share your registered email so I can pull up your info?";
+        "I can pull up your personal royalty status! Could you share your registered email so I can check your account?";
       confidence = 85;
     } else {
       reply = KNOWLEDGE_BASE.royalty_policy;
     }
   }
-  // ISBN
+  // 3. ISBN
   else if (/\bisbn\b/.test(query)) {
-    intent = "isbn_lookup";
+    intent = "isbn";
     if (activeAuthor) {
-      reply = `Hey ${activeAuthor.name}! The ISBN for "${activeAuthor.book_title}" is ${activeAuthor.isbn}. As a reminder, BookLeaf provides a free ISBN during production. It will appear on your back cover and retail listings like Amazon and Flipkart.`;
+      reply = `Hi ${getFirstName(activeAuthor.name)}! Yes, the free ISBN assigned to your book "${activeAuthor.book_title}" is ${activeAuthor.isbn}. Our production team will place it on your back cover and retail pages automatically, so you don't have to worry about a thing!`;
       source = "database";
-      authorFound = true;
       confidence = 96;
     } else if (isPersonalQuery && !activeEmail) {
       reply =
-        "I can check your ISBN for you! Could you share your registered email so I can look up your details?";
+        "I can check your assigned ISBN for you! Could you share your registered email so I can look up your details?";
       confidence = 85;
     } else {
       reply = KNOWLEDGE_BASE.isbn_info;
     }
   }
-  // Author copies
-  else if (/\b(author.?cop|copies|my cop)\b/.test(query)) {
-    intent = "author_copies";
+  // 4. Author Copies
+  else if (
+    /\b(author.?cop|copies|my cop|free copy|free copies|paperback|dispatch|shipment|delivery)\b/.test(
+      query,
+    )
+  ) {
+    intent = "author_copy";
     if (activeAuthor) {
-      reply = `Hey ${activeAuthor.name}! Regarding your author copies for "${activeAuthor.book_title}": ${activeAuthor.author_copy_status} As a reminder, every author gets 2 free paperbacks once published, and you can order more at author prices on your dashboard.`;
+      reply = `Hi ${getFirstName(activeAuthor.name)}! Here is the latest update on your free author copies for "${activeAuthor.book_title}": ${activeAuthor.author_copy_status}. If you ever want to order extra copies, you can purchase them at discounted author rates directly through your dashboard.`;
       source = "database";
-      authorFound = true;
-      confidence = 94;
+      confidence = 96;
     } else if (isPersonalQuery && !activeEmail) {
       reply =
-        "I can check your author copies status for you! Could you share your registered email so I can look it up?";
+        "I can check your author copy shipment status! Could you share your registered email so I can look it up?";
       confidence = 85;
     } else {
       reply = KNOWLEDGE_BASE.author_copies;
     }
   }
-  // Add-on services
-  else if (/\b(add.?on|addon|service|what.*include)\b/.test(query)) {
-    intent = "add_on_services";
+  // 5. Add-on status
+  else if (
+    /\b(add.?on|addon|service|marketing|editing|cover design|audiobook|translation)\b/.test(query)
+  ) {
+    intent = "addon_status";
     if (activeAuthor && activeAuthor.add_on_services?.length > 0) {
-      reply = `Hey ${activeAuthor.name}! You have these active add-ons for "${activeAuthor.book_title}": ${activeAuthor.add_on_services.join(", ")}. BookLeaf offers various add-on services, which you can add anytime before the final proofing stage.`;
+      reply = `Hi ${getFirstName(activeAuthor.name)}! For your book "${activeAuthor.book_title}", you currently have these awesome add-ons active: ${activeAuthor.add_on_services.join(", ")}. If you'd like to add professional editing, cover design, or any of our marketing packages, just let me know and I'll help you set it up!`;
       source = "database";
-      authorFound = true;
-      confidence = 93;
+      confidence = 95;
+    } else if (activeAuthor) {
+      reply = `Hi ${getFirstName(activeAuthor.name)}! It looks like you don't have any active add-on services for "${activeAuthor.book_title}" right now. If you're interested in professional editing, marketing campaigns, or premium cover design, feel free to request them before you approve the final proof!`;
+      source = "database";
+      confidence = 95;
     } else if (isPersonalQuery && !activeEmail) {
       reply =
-        "I can check your active add-on services for you! Could you share your registered email so I can look them up?";
+        "I can check your active add-on packages for you! Could you share your registered email so I can look them up?";
       confidence = 85;
     } else {
       reply = KNOWLEDGE_BASE.add_on_services;
     }
   }
-  // Bestseller package
+  // 6. Bestseller
   else if (/\b(bestseller|best.?seller)\b/.test(query)) {
-    intent = "bestseller_package";
+    intent = "general_info";
     reply = KNOWLEDGE_BASE.bestseller_package;
   }
-  // PR Campaign
+  // 7. PR Campaign
   else if (/\b(pr campaign|press release|media)\b/.test(query)) {
-    intent = "pr_campaign";
+    intent = "general_info";
     reply = KNOWLEDGE_BASE.pr_campaign;
   }
-  // Publishing timeline
-  else if (/\b(timeline|how long|how much time|process|stages|publishing take)\b/.test(query)) {
-    intent = "publishing_timeline";
-    reply = KNOWLEDGE_BASE.publishing_timeline;
+  // 8. Book Status / stage (Hinglish/English)
+  else if (
+    /\b(book.*(live|status|stage|progress|ready)|is.*book.*live|where.*my.*book|my book.*(status|stage)|kab live|kaha hai|kab tak|kab publish|stage kya)\b/.test(
+      query,
+    )
+  ) {
+    intent = "book_status";
+    if (activeAuthor) {
+      reply = `Hi ${getFirstName(activeAuthor.name)}! Your book "${activeAuthor.book_title}" is currently in the ${activeAuthor.publishing_stage} stage. We received your final manuscript submission on ${activeAuthor.final_submission_date}.${activeAuthor.book_live_date ? ` We're working hard to get everything ready, and we expect your book to go live on Amazon, Flipkart, and the BookLeaf store by ${activeAuthor.book_live_date}!` : " Our team is reviewing the files and will update you on the next steps soon!"}`;
+      source = "database";
+      confidence = 96;
+    } else if (activeEmail) {
+      reply = `I couldn't find a publishing account under ${activeEmail}. Please check your registered email address or contact support@bookleafpub.com.`;
+      confidence = 85;
+    } else {
+      reply =
+        "I can check your book's status for you! Could you share your registered email so I can look up your account?";
+      confidence = 85;
+    }
   }
-  // Dashboard / login
+  // 9. Dashboard access
   else if (/\b(dashboard|login|log in|sign in)\b/.test(query)) {
     intent = "dashboard_access";
     reply = KNOWLEDGE_BASE.dashboard;
   }
-  // Password / OTP
+  // 10. Password / OTP
   else if (/\b(password|forgot|otp|can.?t log|unable.*login)\b/.test(query)) {
-    intent = "password_reset";
+    intent = "dashboard_access";
     reply = KNOWLEDGE_BASE.password_reset;
   }
-  // Sales reports
+  // 11. Sales
   else if (/\b(sales|report|analytics|how many.*sold)\b/.test(query)) {
-    intent = "sales_reports";
+    intent = "general_info";
     reply = KNOWLEDGE_BASE.sales_reports;
   }
-  // Amazon / distribution
+  // 12. Distribution / availability
   else if (/\b(amazon|flipkart|distribut|where.*available|prime)/i.test(query)) {
-    intent = "amazon_availability";
+    intent = "general_info";
     reply = KNOWLEDGE_BASE.amazon_availability + " " + KNOWLEDGE_BASE.distribution;
   }
-  // Pen name
+  // 13. Pen name
   else if (/\b(pen name|pseudonym|different name)\b/.test(query)) {
-    intent = "pen_name";
+    intent = "general_info";
     reply = KNOWLEDGE_BASE.pen_name;
   }
-  // Copyright
+  // 14. Copyright
   else if (/\b(copyright|rights|ownership|who owns)\b/.test(query)) {
-    intent = "copyright";
+    intent = "general_info";
     reply = KNOWLEDGE_BASE.copyright;
   }
-  // Refund / cancellation
+  // 15. Refund
   else if (/\b(refund|cancel|money back)\b/.test(query)) {
-    intent = "refund_policy";
+    intent = "general_info";
     reply = KNOWLEDGE_BASE.refund_policy;
-    confidence = 85;
+    confidence = 90;
   }
-  // Writing challenge
+  // 16. Writing challenge
   else if (/\b(writing challenge|contest|competition)\b/.test(query)) {
-    intent = "writing_challenge";
+    intent = "general_info";
     reply = KNOWLEDGE_BASE.writing_challenge;
   }
-  // Support limitations
+  // 17. Support limitations
   else if (/\b(phone|call|video|meet|in.?person)\b/.test(query)) {
-    intent = "support_limitations";
+    intent = "general_info";
     reply = KNOWLEDGE_BASE.support_limitations;
   }
-  // Contact (but not "my email is..." — that's personal context)
+  // 18. Contact
   else if (
     /\b(contact|reach out|email.*support|support.*email|address|how.*reach)\b/.test(query) &&
     !/my email/i.test(query)
   ) {
-    intent = "contact";
+    intent = "general_info";
     reply = KNOWLEDGE_BASE.contact;
   }
-  // Greeting
+  // 19. Greeting
   else if (/^(hi|hello|hey|good morning|good evening)\b/.test(query.trim())) {
-    intent = "greeting";
-    reply =
-      "Hi there! 👋 I'm the BookLeaf support assistant. I can help you with publishing timelines, royalties, ISBNs, book status, and author copies. What's on your mind today?";
+    intent = "general_info";
+    reply = `Hi there! 👋 I'm the BookLeaf support assistant. How can I help you with your publishing journey today?`;
     confidence = 98;
   }
-  // Complaints / legal / sensitive
+  // 20. Complaints
   else if (/\b(complaint|legal|lawyer|sue|harass|threat)\b/.test(query)) {
-    intent = "complaint";
+    intent = "general_info";
     reply =
-      "I'm sorry to hear you're having this experience. For any complaints or sensitive issues, please email us directly at support@bookleafpub.com. One of our team members will get back to you within 24 hours.";
-    confidence = 40;
+      "I'm sorry to hear that. Please email us directly at support@bookleafpub.com and a senior support manager will look into this for you right away.";
+    confidence = 60;
   }
-  // ── STRICT: Unmatched query → escalate (never hallucinate) ──
+  // Unmatched / Escalation
   else {
-    intent = "unmatched";
+    intent = "general_info";
     reply =
-      "I'm not able to verify this request right now, so I've shared this with our support team. They'll review it and get back to you shortly. You can also reach us at support@bookleafpub.com.";
-    confidence = 30;
+      "I'm not completely sure about that. I've shared your question with our support team, and you can also reach us directly at support@bookleafpub.com.";
+    confidence = 35;
     source = "none";
   }
 
   escalated = confidence < 80;
 
-  await logQueryToSupabase(data.message, intent, activeEmail, reply, confidence, escalated);
-
   return { reply, confidence, escalated, intent, matchedEmail: activeEmail, source, authorFound };
-}
-
-// ─── Helpers ─────────────────────────────────────────────────────────
-function normalizeSource(s: unknown): "database" | "knowledge_base" | "none" {
-  const v = String(s ?? "none");
-  if (v === "database" || v === "supabase_live") return "database";
-  if (v === "knowledge_base") return "knowledge_base";
-  return "none";
 }
 
 // ─── Exported server function ────────────────────────────────────────
 export const sendChat = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => chatSchema.parse(input))
   .handler(async ({ data }) => {
-    // 1. If message is ONLY an email or invalid single-word email, route directly to built-in KB to ensure correct verification & zero latency
-    const trimmed = data.message.trim();
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const isEmailOnly = emailRegex.test(trimmed);
-    const hasAtButInvalid =
-      trimmed.includes("@") && !isEmailOnly && trimmed.split(/\s+/).length === 1;
+    const requestId = "BL-" + Math.random().toString(36).substring(2, 7).toUpperCase();
+    const { original, normalized, emails } = cleanAndNormalizeQuery(data.message);
+    const validEmails = emails.filter(isValidAuthorEmail);
 
-    if (isEmailOnly || hasAtButInvalid) {
-      console.log(`[sendChat] Routing email-only / invalid metadata directly to built-in KB.`);
-      return sendViaBuiltinKB(data);
+    // 1. Multiple Match Handling Guard
+    if (validEmails.length > 1) {
+      const multipleMatchResponse =
+        "I noticed multiple email addresses in your message. To make sure I access the right account, could you please specify which one is your registered author email?";
+
+      await logToSupportLogs({
+        request_id: requestId,
+        session_id: data.sessionId,
+        original_query: original,
+        normalized_query: normalized,
+        extracted_email: null,
+        detected_intent: "multiple_matches",
+        confidence: 80,
+        escalated_status: false,
+        final_response: multipleMatchResponse,
+      });
+
+      return {
+        reply: multipleMatchResponse,
+        confidence: 80,
+        intent: "multiple_matches",
+        escalated: false,
+        data_source: "none" as const,
+        requestId: requestId,
+      };
     }
 
-    // 2. Scan history to find if we already have a verified author email to preserve session
+    // 2. Session Memory lookup
     let matchedEmail: string | null = null;
-    const emailRe = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-
-    // Search history for a verified author
-    for (const msg of data.history) {
-      if (msg.role !== "user") continue;
-      const matches = msg.content.match(emailRe) ?? [];
-      for (const e of matches) {
-        if (isValidAuthorEmail(e)) {
-          const author = await lookupAuthor(e);
-          if (author) {
-            matchedEmail = e.toLowerCase();
-            break;
-          }
-        }
-      }
-      if (matchedEmail) break;
+    if (data.sessionId) {
+      matchedEmail = await lookupSessionEmail(data.sessionId);
+      console.log(`[sendChat] Session memory lookup:`, matchedEmail);
     }
 
+    // 3. Email extraction/overrides
+    if (validEmails.length === 1) {
+      const emailToCheck = validEmails[0];
+      const author = await lookupAuthor(emailToCheck);
+      if (author) {
+        matchedEmail = emailToCheck;
+      }
+    }
+
+    // 4. Routing strategies
     const strategies: Array<{ name: string; fn: () => Promise<ChatResult> }> = [];
     if (process.env.N8N_WEBHOOK_URL || process.env.VITE_N8N_WEBHOOK_URL)
       strategies.push({
@@ -754,50 +919,75 @@ export const sendChat = createServerFn({ method: "POST" })
       });
     if (process.env.N8N_MCP_BEARER_TOKEN)
       strategies.push({ name: "n8n-mcp", fn: () => sendViaN8nMcp(data, matchedEmail) });
-    strategies.push({ name: "built-in-kb", fn: () => sendViaBuiltinKB(data) });
+    strategies.push({ name: "built-in-kb", fn: () => sendViaBuiltinKB(data, matchedEmail) });
 
-    let lastError: any;
+    let finalResult: ChatResult | null = null;
     for (const { name, fn } of strategies) {
       try {
         console.log(`[sendChat] Trying ${name}...`);
         const result = await fn();
 
-        // Add protection against empty or invalid responses
         if (result && result.reply && result.reply.trim().length > 0) {
-          console.log(`[sendChat] ${name} succeeded (confidence: ${result.confidence}%)`);
-          // Preserve matched email in result if not set
-          if (!result.matchedEmail && matchedEmail) {
-            result.matchedEmail = matchedEmail;
-          }
-          return result;
-        } else {
-          console.warn(`[sendChat] ${name} returned empty or invalid response payload.`);
+          console.log(`[sendChat] ${name} succeeded`);
+          finalResult = result;
+          break;
         }
-      } catch (err: any) {
-        lastError = err;
-        console.warn(`[sendChat] ${name} failed:`, err?.message ?? err);
+      } catch (err: unknown) {
+        const errMsg = err instanceof Error ? err.message : String(err);
+        console.warn(`[sendChat] ${name} failed:`, errMsg);
       }
     }
 
-    // Graceful fallback if everything fails
-    const fallbackResponse =
-      "I’m having trouble processing this request right now. Please try again in a moment.";
-    await logQueryToSupabase(
-      data.message,
-      "error_fallback",
-      matchedEmail,
-      fallbackResponse,
-      0,
-      true,
-    );
+    // Fallback response if all failed
+    if (!finalResult) {
+      const fallbackResponse =
+        "I'm having trouble processing this request right now. Please try again in a moment.";
+      finalResult = {
+        reply: fallbackResponse,
+        confidence: 30,
+        escalated: true,
+        intent: "general_info",
+        matchedEmail,
+        source: "none" as const,
+        authorFound: !!matchedEmail,
+      };
+    }
 
+    // 5. Update session memory if matched email changed or intent verified
+    if (data.sessionId && finalResult.matchedEmail) {
+      await saveSessionEmail(
+        data.sessionId,
+        finalResult.matchedEmail,
+        finalResult.intent,
+        data.message,
+      );
+    }
+
+    // 6. Query Interaction Logging (asynchronous support_logs)
+    await logToSupportLogs({
+      request_id: requestId,
+      session_id: data.sessionId,
+      original_query: original,
+      normalized_query: normalized,
+      extracted_email: finalResult.matchedEmail || (validEmails.length > 0 ? validEmails[0] : null),
+      detected_intent: finalResult.intent,
+      confidence: finalResult.confidence,
+      escalated_status: finalResult.escalated,
+      final_response: finalResult.reply,
+    });
+
+    // 7. Return exactly the required final response format
     return {
-      reply: fallbackResponse,
-      confidence: 0,
-      escalated: true,
-      intent: "error",
-      matchedEmail,
-      source: "none" as const,
-      authorFound: !!matchedEmail,
+      reply: finalResult.reply,
+      confidence: finalResult.confidence,
+      intent: finalResult.intent,
+      escalated: finalResult.escalated,
+      data_source:
+        finalResult.source === "database"
+          ? "db_record"
+          : finalResult.source === "knowledge_base"
+            ? "knowledge_base"
+            : "none",
+      requestId: requestId,
     };
   });
