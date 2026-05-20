@@ -28,44 +28,52 @@ type ChatResult = {
   authorFound: boolean;
 };
 
-// ─── Knowledge Base (all assignment-required topics) ─────────────────
+// ─── Knowledge Base (Comprehensive FAQ) ──────────────────────────────
 const KNOWLEDGE_BASE: Record<string, string> = {
-  publishing_timeline:
-    "Our publishing process usually takes about 45 to 60 days from start to finish. We start with a manuscript review which takes 1 to 2 weeks. After that we dive into editing cover design and formatting which takes about 3 to 4 weeks. Once you approve the final proof your book will go live on stores within 7 days!",
-  royalty_policy:
-    "Royalties are calculated every month and sent over bank transfer by the 28th. You will get 10% of the price for printed paperback copies and 25% for eBooks. This begins 6 months after your book goes live if you have crossed the 500 rupees minimum threshold.",
-  isbn_info:
-    "Don't worry about the ISBN! We have you covered. We provide a free ISBN during production and it will be placed on your book's back cover and retail pages automatically.",
-  author_copies:
-    "We send you 2 free paperback copies of your book as soon as it's published! If you ever need more copies you can order them at a special author discount right from your dashboard.",
-  add_on_services:
-    "We offer quite a few cool add-ons like professional editing custom cover designs marketing campaigns and audiobook production. Feel free to request any of these before you approve the final book proof.",
-  bestseller_package:
-    "Our Bestseller Package is designed to give your book a strong start. We run a targeted Amazon campaign across 3 relevant categories within a 48 to 72 hour launch window plus promote it on our socials. We usually start this 30 to 45 days after your book goes live. While we do our absolute best we can't guarantee a specific sales rank.",
-  pr_campaign:
-    "Our PR Campaign gets your book featured in online news portals and media outlets to boost visibility. We handle everything from writing the press release to distributing it. Let our support team know if you want to get started!",
-  dashboard:
-    "You can log in to your dashboard anytime at dashboard.bookleafpub.com. Just enter your registered email address to receive a secure login code. If you have any trouble getting in just drop us an email at support@bookleafpub.com and we'll help you out!",
-  password_reset:
-    "To keep things simple and secure we use one-time passcodes sent to your registered email instead of traditional passwords. That means there's no password to reset! Just head over to dashboard.bookleafpub.com and enter your email to get your login code.",
-  sales_reports:
-    "You can track your sales anytime on the Sales tab of your author dashboard. The data updates once a week and covers all sales from Amazon Flipkart and the BookLeaf store.",
-  distribution:
-    "We distribute your book across Amazon India Amazon Global Flipkart and the BookLeaf bookstore. Please keep in mind that we don't handle offline bookstore placement.",
-  amazon_availability:
-    "Your book will list on Amazon Flipkart and the BookLeaf store within 7 days of going live. Prime eligibility depends entirely on Amazon centers so it is not something we can guarantee ourselves.",
-  copyright:
-    "You retain 100% of the copyright and creative ownership of your work! We only hold non-exclusive distribution rights as outlined in our publishing agreement.",
-  pen_name:
-    "Yes you can absolutely publish under a pen name! Just let our editorial team know during the manuscript review stage so we can set it up correctly on retail sites and your book cover.",
-  refund_policy:
-    "We can issue a full refund as long as production work hasn't started yet. Once our team begins working on your book we won't be able to process a refund. For any specific order questions please email us at support@bookleafpub.com.",
   writing_challenge:
-    "We love hosting writing contests and challenges! You can find all the details and updates for our upcoming challenges on our website and social channels.",
+    "You can join our 21-Day Writing Challenge for ₹1999! This includes publishing your poetry book as a paperback and eBook. You'll submit one poem daily for 21 days. If you're a returning author your existing dashboard remains active and we just need to enable the 'Add a New Book' button for you. Check out the challenge details on our website!",
+  publishing_timeline:
+    "For standard publishing it takes about 30 to 45 business days from your final submission. If you've opted for the Bestseller Breakthrough Package we fast-track it to 18 to 22 business days! Your status will show as 'In Review' while our team handles formatting ISBN assignment and cover integration.",
+  royalty_policy:
+    "You get 10% royalty on printed paperbacks and 25% on eBooks (80% of net profit for regular authors, 100% for Bestseller Package). Royalties are paid via Razorpay link once you cross the threshold: ₹2000 for Indian authors or $100 for International. Bestseller Breakthrough authors have no threshold and can request on-demand payout after 30 days live. Calculate your exact earnings at bookleafpub.in/printing-cost-royalty-calculator.",
+  sales_reports:
+    "Track your sales at ebooks.bookleafpub.com/sales-reports. Reports are updated monthly after the 15th and are current up to the month before last. For new authors the first report is available 45-60 business days after going live. Just enter your ISBN in the white column to see your data!",
+  isbn_info:
+    "We provide a free ISBN for your book which is assigned during the production stage. Please note that this ISBN is for BookLeaf distribution only. If you want to use Amazon KDP yourself you'll need your own ISBN or the one Amazon assigns.",
+  author_copies:
+    "For Indian authors we provide one free author copy via a coupon code after publication. To get your coupon just complete the review form at https://docs.google.com/forms/d/e/1FAIpQLSc2q8Npy9bO3zpDuQKiupQP3ALNp_oYDjiEW7I46iSAF9Z64Q/viewform?usp=sf_link. Bestseller Package authors receive 5 complimentary copies (India only).",
+  add_on_services:
+    "We offer four main Expert Publishing services: Global Distribution (13 Amazon marketplaces + Ingram) the Emily Dickinson Award Global Distribution Bundle (includes Copyright) and the Bestseller Breakthrough Package (Priority publishing + Marketing guides).",
+  add_on_prices:
+    "Indian authors: Bestseller Package (₹11,999) - twa.bookleafpub.in/bestseller-breakthrough-india-dash-before-completion. Global Bundle (₹8,899) - rzp.io/rzp/uVwzD96. Global Distribution (₹5,499) - rzp.io/l/3lfxiA4Sg. Award (₹4,499) - rzp.io/l/KMajEJzA. Post Publishing Changes (₹2,150) - rzp.io/l/3mXfNwdA. International authors: Bestseller ($249) Global Bundle ($135) Global Dist ($75) Award ($115) and Paperback India ($35).",
+  dashboard_login:
+    "You can log in at dashboard.bookleafpub.in. If you haven't received your credentials within 2 minutes of payment check your spam folder! If you forgot your password just use the 'Forgot Password' link to receive a reset code via email.",
+  hindi_support:
+    "Yes you can absolutely submit Hindi poems! You can type them using Google Input Tools or copy-paste from another document. Just make sure to double-check the formatting in the dashboard preview.",
+  cover_design:
+    "You can design your cover using our dashboard templates or upload your own 5x8 inch custom front cover. Note that custom back covers aren't supported yet but you can customize the text and add an author photo to our standard back cover layout.",
+  distribution:
+    "Your book will be available on the BookLeaf store Amazon India and Flipkart. With Global Distribution we expand this to all 13 Amazon marketplaces (US UK Canada etc.) Barnes & Noble and the Ingram network (30,000+ stores and libraries).",
+  copyright:
+    "You retain 100% ownership! For Bestseller authors we handle Copyright Registration in 3 steps: 1. You receive a form and submit PAN/Aadhaar. 2. We file with the Indian Copyright Office. 3. Certificate arrives in 6-9 months although you are protected from the moment we file.",
+  award_info:
+    "The 21st Century Emily Dickinson Award is a symbolic recognition included in some packages. It's dispatched in batches 45-60 business days after your book is live. Note that awards are not personalized with author names to ensure timely delivery across hundreds of authors.",
   support_limitations:
-    "We provide all of our support directly over email at support@bookleafpub.com. We aren't able to offer phone or video calls right now but our team works hard to reply to every email within 24 to 48 business hours.",
-  contact:
-    "You can always reach us at support@bookleafpub.com for help with your book or info@bookleafpub.com for general inquiries. Our main office is located on New Airport Road Srinagar J&K 190005.",
+    "To maintain efficiency we do not offer phone calls or video meetings. All support is provided via WhatsApp email or our helpdesk. We also don't offer standalone editing or custom design services and we strictly only publish poetry at this time (no fiction or novels).",
+  kdp_restrictions:
+    "You cannot use BookLeaf-provided files or ISBNs to upload your book to Amazon KDP or other platforms independently. If you wish to publish on KDP you must use a different ISBN and a version of your book without BookLeaf branding.",
+  registration_links:
+    "Ready to start? Indian authors can sign up at bookleafpub.in/writing-challenge while international authors can join at bookleafpub.com/writing-challenge-us.",
+  support_contact:
+    "For technical issues or registration help please raise a ticket at bookleafpublishing.freshdesk.com or email us at support@bookleafpub.com. We do not offer phone or video support. You can also watch our tutorial at youtu.be/Z9wxMeo624k.",
+  fiction_policy:
+    "BookLeaf Publishing currently only accepts poetry submissions for the 21-Day Writing Challenge. We do not accept fiction novels short stories or anthologies.",
+  refund_policy:
+    "We offer a full refund as long as our production team hasn't started working on your book yet. Once production begins we can't process a refund. If you're not satisfied with the challenge please reach out to our support team.",
+  pen_name:
+    "Yes you can use a pen name or pseudonym for both the writing challenge and your published book! Just set it up in your author profile on the dashboard.",
+  bestseller_package:
+    "The Bestseller Breakthrough Package includes a dedicated Publishing Consultant (who will contact you via email within 5-7 business days), priority publishing (18-22 days), 5 free author copies (Indian authors only), and Amazon Prime placement. You also get global distribution across 13 marketplaces and Ingram network.",
 };
 
 interface Author {
@@ -163,7 +171,10 @@ async function sendViaN8nWebhook(
   try {
     const res = await fetch(webhookUrl, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "X-BookLeaf-Secret": process.env.N8N_WEBHOOK_SECRET || "bl-prod-secure-123",
+      },
       signal: controller.signal,
       body: JSON.stringify({
         query: data.message,
@@ -265,9 +276,16 @@ async function sendViaN8nMcp(
     if (!execId) throw new Error("MCP_NO_EXEC_ID");
     console.log(`[MCP] Workflow execution started: ${execId}`);
 
-    const delays = [1000, 2000, 3000, 4000, 5000, 5000];
-    for (const delay of delays) {
+    // Exponential backoff with jitter for polling
+    let attempt = 0;
+    const maxAttempts = 8;
+    const baseDelay = 1000;
+
+    while (attempt < maxAttempts) {
+      const delay = Math.pow(1.5, attempt) * baseDelay + Math.random() * 500;
       await new Promise((r) => setTimeout(r, delay));
+      attempt++;
+
       const poll = await mcpCall(
         mcpToken,
         "tools/call",
@@ -547,10 +565,11 @@ function cleanAndNormalizeQuery(query: string): {
 // ─── Gemini AI Smart Preprocessor ─────────────────────────────────────
 interface GeminiPreprocessResult {
   correctedQuery: string;
-  extractedIntent: string | null;
+  extractedIntents: string[]; // Changed to array for multi-intent support
   extractedEmail: string | null;
   extractedName: string | null;
   isGreeting: boolean;
+  isRambling: boolean; // Flag to indicate if the user is writing a long/complex sentence
 }
 
 async function geminiPreprocess(
@@ -572,7 +591,7 @@ async function geminiPreprocess(
 
     const prompt = `You are a smart query preprocessor for BookLeaf Publishing's author support chatbot.
 
-Your job is to take a user's raw messy input and return a clean JSON object.
+Your job is to analyze a user's input (especially long or complex sentences) and extract all relevant information.
 
 Context of the conversation so far:
 ${conversationContext || "(new conversation)"}
@@ -580,16 +599,16 @@ ${conversationContext || "(new conversation)"}
 The user just typed: "${rawMessage}"
 
 Do the following:
-1. Fix all spelling mistakes and typos
-2. Identify the core intent from this list: greeting, book_status, royalty, isbn, author_copies, publishing_timeline, add_on_services, bestseller_package, pr_campaign, dashboard, sales_reports, distribution, copyright, pen_name, refund, contact, complaint, introduction, unknown
-3. Extract any email address if present
-4. Extract the user's name if they introduce themselves
-5. Determine if this is a greeting or casual hello
-
-IMPORTANT: If the message is clearly a follow-up referencing previous conversation context (like just saying "status" or "publish" after providing an email) then use the conversation history to understand what they mean and set the correctedQuery to a complete sentence.
+1. Fix all spelling mistakes and typos.
+2. Identify ALL core intents present in the message from this list: greeting, book_status, royalty, isbn, author_copies, publishing_timeline, add_on_services, bestseller_package, pr_campaign, dashboard, sales_reports, distribution, copyright, pen_name, refund, contact, complaint, introduction, pricing, hindi_support, unknown.
+3. If the user mentions multiple topics (e.g., "how long does it take and what is the royalty?"), capture BOTH intents.
+4. Extract any email address if present.
+5. Extract the user's name if they introduce themselves.
+6. Determine if the user is writing a long/complex sentence (isRambling: true).
+7. Set "correctedQuery" to a clean, keyword-dense master query that summarizes EVERYTHING the user asked.
 
 Return ONLY valid JSON with no markdown formatting:
-{"correctedQuery": "the cleaned up version of what the user meant", "extractedIntent": "one of the intents above or null", "extractedEmail": "email@example.com or null", "extractedName": "their name or null", "isGreeting": true/false}`;
+{"correctedQuery": "clean master query", "extractedIntents": ["intent1", "intent2"], "extractedEmail": "email@example.com or null", "extractedName": "their name or null", "isGreeting": true/false, "isRambling": true/false}`;
 
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash",
@@ -640,15 +659,17 @@ async function sendViaBuiltinKB(
     activeEmail = validEmails[0];
   }
 
-  // Look in history for valid email if none active
-  if (!activeEmail) {
-    for (const msg of data.history) {
+  // Look in history for valid email if none active (Search from latest to oldest)
+  if (!activeEmail && data.history?.length > 0) {
+    const reversedHistory = [...data.history].reverse();
+    for (const msg of reversedHistory) {
       if (msg.role !== "user") continue;
       const historyEmails =
         msg.content.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g) ?? [];
       const historyValids = historyEmails.filter(isValidAuthorEmail);
-      if (historyValids.length === 1) {
-        activeEmail = historyValids[0].toLowerCase();
+      if (historyValids.length >= 1) {
+        activeEmail = historyValids[historyValids.length - 1].toLowerCase();
+        console.log(`[BuiltinKB] Found email in history: ${activeEmail}`);
         break;
       }
     }
@@ -657,6 +678,11 @@ async function sendViaBuiltinKB(
   let activeAuthor: Author | null = null;
   if (activeEmail) {
     activeAuthor = await lookupAuthor(activeEmail);
+    if (!activeAuthor) {
+      console.log(`[BuiltinKB] Active email ${activeEmail} not found in DB`);
+    }
+  } else {
+    console.log(`[BuiltinKB] No active email identified for query: "${original}"`);
   }
 
   const getFirstName = (fullName: string) => {
@@ -672,8 +698,8 @@ async function sendViaBuiltinKB(
     ) || /\b(kab|kaha|status|stage|royalty)\b/i.test(query);
 
   let intent = "";
-  let reply = "";
-  let confidence = 90;
+  let replies: string[] = []; // Store multiple replies for long sentences
+  let matchedConfidences: number[] = []; // Track confidences for each match
   let source: "database" | "knowledge_base" | "none" = "knowledge_base";
   let authorFound = !!activeAuthor;
   let escalated = false;
@@ -688,250 +714,247 @@ async function sendViaBuiltinKB(
     intent = "email_submission";
     const author = await lookupAuthor(original.trim());
     if (author) {
-      reply = `Thanks ${getFirstName(author.name)}! I found your profile. How can I help you today?`;
-      confidence = 100;
+      replies.push(`Thanks ${getFirstName(author.name)}! I found your profile. How can I help you today?`);
+      matchedConfidences.push(100);
       escalated = false;
       authorFound = true;
       source = "database";
       activeEmail = original.trim().toLowerCase();
     } else {
-      reply =
-        "I couldn't find an author account linked to that email. Could you double-check the spelling or try your registered email?";
-      confidence = 85;
+      replies.push("I couldn't find an author account linked to that email. Could you double-check the spelling or try your registered email?");
+      matchedConfidences.push(85);
       escalated = false;
       authorFound = false;
       source = "none";
       activeEmail = original.trim().toLowerCase();
     }
-    return { reply, confidence, escalated, intent, matchedEmail: activeEmail, source, authorFound };
+    return { reply: replies.join(" "), confidence: matchedConfidences[0], escalated, intent, matchedEmail: activeEmail, source, authorFound };
   } else if (hasAtButInvalid) {
     intent = "email_invalid";
-    reply = "Could you enter a valid email address so I can look up your profile?";
-    confidence = 85;
+    replies.push("Could you enter a valid email address so I can look up your profile?");
+    matchedConfidences.push(85);
     escalated = false;
     authorFound = false;
     source = "none";
-    return { reply, confidence, escalated, intent, matchedEmail: activeEmail, source, authorFound };
+    return { reply: replies.join(" "), confidence: matchedConfidences[0], escalated, intent, matchedEmail: activeEmail, source, authorFound };
   }
 
   // Off-topic check
-  else if (
+  if (
     /\b(joke|riddle|bake|cake|recipe|cook|food|chocolate|ipl|cricket|sports|football|won.*match|game|score|weather|temperature|rain|sun|joke|funny|movie|song|music|singer)\b/i.test(
       original,
     )
   ) {
     intent = "general_info";
-    reply =
-      "That doesn't seem related to BookLeaf support. How can I help you with your book instead?";
-    confidence = 85;
+    replies.push("That doesn't seem related to BookLeaf support. How can I help you with your book instead?");
+    matchedConfidences.push(85);
     escalated = false;
     source = "none";
   }
 
-  // Intent checks
-  // 1. Publishing timeline (Hinglish/English)
-  else if (
-    /\b(timeline|how long|how much time|process|stages|publishing take|kitna time|kitne din|days|din lagenge|kab tak|kab hoga)\b/.test(
-      query,
-    )
-  ) {
+  // Intent checks (Non-exclusive for long sentences)
+  // 1. Publishing timeline
+  if (/\b(timeline|process|stage|publishing take|kitna time|kitne din|days|din lagenge|kab tak|kab hoga)\b/i.test(query)) {
     intent = "publishing_timeline";
-    reply = KNOWLEDGE_BASE.publishing_timeline;
+    replies.push(KNOWLEDGE_BASE.publishing_timeline);
+    matchedConfidences.push(95);
   }
-  // 2. Royalty (Hinglish/English)
-  else if (
-    /\b(royalt|payment|paid|earning|when.*get.*money|paisa|rupee|earning|milega|milegi|milenge|rupay|rupya)\b/.test(
-      query,
-    )
-  ) {
+  // 2. Royalty
+  if (/\b(royalty|royalties|payment|paid|earning|paisa|rupee|milega|milegi|milenge|rupay|rupya)\b/i.test(query)) {
     intent = "royalty";
     if (activeAuthor) {
       const cleanRoyalty = activeAuthor.royalty_status.replace(/,/g, "").replace(/\./g, "");
-      reply = `Hi ${getFirstName(activeAuthor.name)}! I checked your account for your book "${activeAuthor.book_title}" and your royalty status is ${cleanRoyalty} Just a heads up that statements are sent to your email and payments go through by the 28th of each month`;
+      replies.push(`Hi ${getFirstName(activeAuthor.name)}! I checked your account for your book "${activeAuthor.book_title}" and your royalty status is ${cleanRoyalty} Just a heads up that statements are sent to your email and payments go through by the 28th of each month`);
       source = "database";
-      confidence = 96;
-    } else if (activeEmail) {
-      reply = `I couldn't find a publishing account under ${activeEmail} Could you double-check your registered email address or drop a line to support@bookleafpub.com`;
-      confidence = 85;
-    } else if (isPersonalQuery) {
-      reply =
-        "I can pull up your personal royalty status! Could you share your registered email so I can look that up for you";
-      confidence = 85;
+      matchedConfidences.push(96);
+    } else if (isPersonalQuery && !activeEmail) {
+      replies.push("I can pull up your personal royalty status! Could you share your registered email so I can look that up for you");
+      matchedConfidences.push(85);
     } else {
-      reply = KNOWLEDGE_BASE.royalty_policy;
+      replies.push(KNOWLEDGE_BASE.royalty_policy);
+      matchedConfidences.push(95);
     }
   }
   // 3. ISBN
-  else if (/\bisbn\b/.test(query)) {
+  if (/\bisbn|kdp\b/i.test(query)) {
     intent = "isbn";
-    if (activeAuthor) {
-      reply = `Hi ${getFirstName(activeAuthor.name)}! Yes the free ISBN for your book "${activeAuthor.book_title}" is ${activeAuthor.isbn} and our production team will place it on the back cover and retail pages automatically so you don't have to worry about a thing`;
+    if (query.includes("kdp")) {
+      replies.push(KNOWLEDGE_BASE.kdp_restrictions);
+      matchedConfidences.push(98);
+    } else if (activeAuthor) {
+      replies.push(`Hi ${getFirstName(activeAuthor.name)}! Yes the free ISBN for your book "${activeAuthor.book_title}" is ${activeAuthor.isbn} and our production team will place it on the back cover and retail pages automatically so you don't have to worry about a thing`);
       source = "database";
-      confidence = 96;
+      matchedConfidences.push(96);
     } else if (isPersonalQuery && !activeEmail) {
-      reply =
-        "I can check your assigned ISBN for you! Could you share your registered email so I can look up your details";
-      confidence = 85;
+      replies.push("I can check your assigned ISBN for you! Could you share your registered email so I can look up your details");
+      matchedConfidences.push(85);
     } else {
-      reply = KNOWLEDGE_BASE.isbn_info;
+      replies.push(KNOWLEDGE_BASE.isbn_info);
+      matchedConfidences.push(95);
     }
   }
   // 4. Author Copies
-  else if (
-    /\b(author.?cop|copies|my cop|free copy|free copies|paperback|dispatch|shipment|delivery)\b/.test(
-      query,
-    )
-  ) {
+  if (/\b(author.?cop|copies|free copy|paperback|dispatch|shipment|delivery)\b/i.test(query)) {
     intent = "author_copy";
     if (activeAuthor) {
       const cleanCopy = activeAuthor.author_copy_status.replace(/,/g, "").replace(/\.$/, "");
-      reply = `Hi ${getFirstName(activeAuthor.name)}! I checked your free author copies for "${activeAuthor.book_title}" and the status is ${cleanCopy} If you want to order extra copies you can get them at discounted author rates directly through your dashboard`;
+      replies.push(`Hi ${getFirstName(activeAuthor.name)}! I checked your free author copies for "${activeAuthor.book_title}" and the status is ${cleanCopy} If you want to order extra copies you can get them at discounted author rates directly through your dashboard`);
       source = "database";
-      confidence = 96;
+      matchedConfidences.push(96);
     } else if (isPersonalQuery && !activeEmail) {
-      reply =
-        "I can check your author copy shipment status! Could you share your registered email so I can look it up";
-      confidence = 85;
+      replies.push("I can check your author copy shipment status! Could you share your registered email so I can look it up");
+      matchedConfidences.push(85);
     } else {
-      reply = KNOWLEDGE_BASE.author_copies;
+      replies.push(KNOWLEDGE_BASE.author_copies);
+      matchedConfidences.push(95);
     }
   }
-  // 5. Add-on status
-  else if (
-    /\b(add.?on|addon|service|marketing|editing|cover design|audiobook|translation)\b/.test(query)
-  ) {
-    intent = "addon_status";
-    if (activeAuthor && activeAuthor.add_on_services?.length > 0) {
-      const cleanAddons = activeAuthor.add_on_services.join(" and ").replace(/,/g, "");
-      reply = `Hi ${getFirstName(activeAuthor.name)}! For your book "${activeAuthor.book_title}" you currently have these add-ons active: ${cleanAddons} If you want to add professional editing cover design or marketing packages just let me know and I'll help you set it up`;
-      source = "database";
-      confidence = 95;
-    } else if (activeAuthor) {
-      reply = `Hi ${getFirstName(activeAuthor.name)}! It looks like you don't have any active add-on services for "${activeAuthor.book_title}" right now but if you're interested in professional editing marketing campaigns or premium cover design feel free to request them before you approve the final proof`;
-      source = "database";
-      confidence = 95;
-    } else if (isPersonalQuery && !activeEmail) {
-      reply =
-        "I can check your active add-on packages for you! Could you share your registered email so I can look them up";
-      confidence = 85;
-    } else {
-      reply = KNOWLEDGE_BASE.add_on_services;
-    }
+  // 5. Writing Challenge
+  if (/\b(challenge|join|poetry|21 day)\b/i.test(query)) {
+    intent = "writing_challenge";
+    replies.push(KNOWLEDGE_BASE.writing_challenge);
+    matchedConfidences.push(95);
   }
-  // 6. Bestseller
-  else if (/\b(bestseller|best.?seller)\b/.test(query)) {
-    intent = "general_info";
-    reply = KNOWLEDGE_BASE.bestseller_package;
+  // 6. Pricing
+  if (/\b(price|cost|how much|fee|link|payment)\b/i.test(query)) {
+    intent = "pricing";
+    replies.push(KNOWLEDGE_BASE.add_on_prices);
+    matchedConfidences.push(95);
   }
-  // 7. PR Campaign
-  else if (/\b(pr campaign|press release|media)\b/.test(query)) {
-    intent = "general_info";
-    reply = KNOWLEDGE_BASE.pr_campaign;
+  // 7. Hindi Support
+  if (/\b(hindi|keyboard|regional language)\b/i.test(query)) {
+    intent = "hindi_support";
+    replies.push(KNOWLEDGE_BASE.hindi_support);
+    matchedConfidences.push(95);
   }
-  // 8. Book Status / stage (Hinglish/English)
-  else if (
-    /\b(status|stage|progress|publish|live|ready|where.*book|book.*(status|stage|live|progress|ready)|kab live|kaha hai|kab tak|kab publish|stage kya)\b/.test(
-      query,
-    )
-  ) {
+  // 8. Book Status
+  if (/\b(status|stage|progress|publish|live|ready|where.*book|kab live|kaha hai|kab tak|kab publish|stage kya)\b/i.test(query)) {
     intent = "book_status";
     if (activeAuthor) {
       const cleanSubmission = activeAuthor.final_submission_date.replace(/,/g, "");
       const cleanLive = activeAuthor.book_live_date ? activeAuthor.book_live_date.replace(/,/g, "") : null;
-      reply = `Hi ${getFirstName(activeAuthor.name)}! Your book "${activeAuthor.book_title}" is currently in the ${activeAuthor.publishing_stage} stage and we got your final manuscript submission on ${cleanSubmission}${cleanLive ? ` We're working hard to get everything ready and expect your book to go live on Amazon Flipkart and the BookLeaf store by ${cleanLive}` : " Our team is reviewing the files and we'll update you on the next steps very soon"}`;
+      replies.push(`Hi ${getFirstName(activeAuthor.name)}! Your book "${activeAuthor.book_title}" is currently in the ${activeAuthor.publishing_stage} stage and we got your final manuscript submission on ${cleanSubmission}${cleanLive ? ` We're working hard to get everything ready and expect your book to go live on Amazon Flipkart and the BookLeaf store by ${cleanLive}` : " Our team is reviewing the files and we'll update you on the next steps very soon"}`);
       source = "database";
-      confidence = 96;
-    } else if (activeEmail) {
-      reply = `I couldn't find a publishing account under ${activeEmail} Could you double-check your registered email address or drop a line to support@bookleafpub.com`;
-      confidence = 85;
-    } else {
-      reply =
-        "I can check your book's status for you! Could you share your registered email so I can look up your account";
-      confidence = 85;
+      matchedConfidences.push(96);
+    } else if (!activeEmail) {
+      replies.push("I can check your book's status for you! Could you share your registered email so I can look up your account");
+      matchedConfidences.push(85);
     }
   }
-  // 9. Dashboard access
-  else if (/\b(dashboard|login|log in|sign in)\b/.test(query)) {
+  // 9. Dashboard login / Password
+  if (/\b(dashboard|login|log in|sign in|password|otp|forgot|can.?t log|unable.*login|credential)\b/i.test(query)) {
     intent = "dashboard_access";
-    reply = KNOWLEDGE_BASE.dashboard;
+    replies.push(KNOWLEDGE_BASE.dashboard_login);
+    matchedConfidences.push(95);
   }
-  // 10. Password / OTP
-  else if (/\b(password|forgot|otp|can.?t log|unable.*login)\b/.test(query)) {
-    intent = "dashboard_access";
-    reply = KNOWLEDGE_BASE.password_reset;
+  // 10. Cover Design
+  if (/\b(cover|design|template|author info|photo|back cover)\b/i.test(query)) {
+    intent = "cover_design";
+    replies.push(KNOWLEDGE_BASE.cover_design);
+    matchedConfidences.push(95);
+  }
+  // 11. Distribution
+  if (/\b(amazon|flipkart|distribut|where.*available|prime|ingram|barnes)\b/i.test(query)) {
+    intent = "general_info";
+    replies.push(KNOWLEDGE_BASE.distribution);
+    matchedConfidences.push(95);
   }
   // 11. Sales
-  else if (/\b(sales|report|analytics|how many.*sold)\b/.test(query)) {
+  if (/\bsales|report|analytics|how many.*sold\b/i.test(query)) {
     intent = "general_info";
-    reply = KNOWLEDGE_BASE.sales_reports;
+    replies.push(KNOWLEDGE_BASE.sales_reports);
+    matchedConfidences.push(95);
   }
-  // 12. Distribution / availability
-  else if (/\b(amazon|flipkart|distribut|where.*available|prime)/i.test(query)) {
-    intent = "general_info";
-    reply = KNOWLEDGE_BASE.amazon_availability + " " + KNOWLEDGE_BASE.distribution;
+  // 11b. Royalty Thresholds & Claims
+  if (/\bthreshold|minimum|claim|razorpay|payout|transfer|bank account|upi\b/i.test(query)) {
+    intent = "royalty";
+    replies.push(KNOWLEDGE_BASE.royalty_policy);
+    matchedConfidences.push(95);
+  }
+  // 12. Add-on services
+  if (/\badd.?on|addon|service|marketing|editing|bestseller|breakthrough|award|dickinson|copyright|consultant|manager\b/i.test(query)) {
+    intent = "addon_status";
+    if (/\bconsultant|manager\b/i.test(query)) {
+      replies.push(KNOWLEDGE_BASE.bestseller_package);
+    } else if (/\baward|dickinson\b/i.test(query)) {
+      replies.push(KNOWLEDGE_BASE.award_info);
+    } else {
+      replies.push(KNOWLEDGE_BASE.add_on_services);
+    }
+    matchedConfidences.push(95);
   }
   // 13. Pen name
-  else if (/\b(pen name|pseudonym|different name)\b/.test(query)) {
+  if (/\bpen name|pseudonym|different name\b/i.test(query)) {
     intent = "general_info";
-    reply = KNOWLEDGE_BASE.pen_name;
+    replies.push(KNOWLEDGE_BASE.pen_name);
+    matchedConfidences.push(95);
+  }
+  // 13b. Fiction Policy
+  if (/\bfiction|novel|short story\b/i.test(query)) {
+    intent = "general_info";
+    replies.push(KNOWLEDGE_BASE.fiction_policy);
+    matchedConfidences.push(98);
   }
   // 14. Copyright
-  else if (/\b(copyright|rights|ownership|who owns)\b/.test(query)) {
+  if (/\b(copyright|rights|ownership|who owns)\b/i.test(query)) {
     intent = "general_info";
-    reply = KNOWLEDGE_BASE.copyright;
+    replies.push(KNOWLEDGE_BASE.copyright);
+    matchedConfidences.push(95);
   }
   // 15. Refund
-  else if (/\b(refund|cancel|money back)\b/.test(query)) {
+  if (/\b(refund|cancel|money back)\b/i.test(query)) {
     intent = "general_info";
-    reply = KNOWLEDGE_BASE.refund_policy;
-    confidence = 90;
+    replies.push(KNOWLEDGE_BASE.refund_policy);
+    matchedConfidences.push(90);
   }
-  // 16. Writing challenge
-  else if (/\b(writing challenge|contest|competition)\b/.test(query)) {
+  // 17. Contact / Technical Issues
+  if (/\b(contact|reach out|email.*support|support.*email|address|how.*reach|ticket|freshdesk|issue|problem|working|load|video|tutorial|register|sign up|join)\b/i.test(query)) {
     intent = "general_info";
-    reply = KNOWLEDGE_BASE.writing_challenge;
+    if (/\bregister|sign up|join\b/i.test(query)) {
+      replies.push(KNOWLEDGE_BASE.registration_links);
+    } else {
+      replies.push(KNOWLEDGE_BASE.support_contact);
+    }
+    matchedConfidences.push(95);
   }
-  // 17. Support limitations
-  else if (/\b(phone|call|video|meet|in.?person)\b/.test(query)) {
+  // 18. Complaints
+  if (/\b(complaint|legal|lawyer|sue|harass|threat)\b/i.test(query)) {
     intent = "general_info";
-    reply = KNOWLEDGE_BASE.support_limitations;
+    replies.push("I'm really sorry to hear that. Please email us at support@bookleafpub.com and a senior support manager will look into this for you right away");
+    matchedConfidences.push(60);
   }
-  // 18. Contact
-  else if (
-    /\b(contact|reach out|email.*support|support.*email|address|how.*reach)\b/.test(query) &&
-    !/my email/i.test(query)
-  ) {
-    intent = "general_info";
-    reply = KNOWLEDGE_BASE.contact;
-  }
-  // 19. Greeting and Introductions
-  else if (
-    /^(hi+|hello+|hey+|heya|howdy|good morning|good evening|yo)\b/i.test(query.trim()) ||
-    /\b(my name is|i am|i'm|this is)\b/i.test(query.trim())
-  ) {
-    intent = "general_info";
-    reply = "Hi there! 👋 I'm the BookLeaf support assistant. How can I help you with your publishing journey today";
-    confidence = 98;
-  }
-  // 20. Complaints
-  else if (/\b(complaint|legal|lawyer|sue|harass|threat)\b/.test(query)) {
-    intent = "general_info";
-    reply =
-      "I'm really sorry to hear that. Please email us at support@bookleafpub.com and a senior support manager will look into this for you right away";
-    confidence = 60;
-  }
-  // Unmatched / Escalation
-  else {
-    intent = "general_info";
-    reply =
-      "I'm not completely sure about that but I've shared your question with our support team so they can look into it. You can also reach us directly at support@bookleafpub.com";
-    confidence = 35;
-    source = "none";
+
+  // Final Reply synthesis
+  let finalReply = "";
+  let confidence = 90;
+  if (replies.length > 0) {
+    // Remove duplicate information from multiple matches
+    const uniqueReplies = Array.from(new Set(replies));
+    finalReply = uniqueReplies.join(" ");
+    // Use the minimum confidence from all matches for safety
+    confidence = matchedConfidences.length > 0 ? Math.min(...matchedConfidences) : 90;
+  } else {
+    // 19. Greeting and Introductions (Only if no other intent matched)
+    if (
+      /^(hi+|hello+|hey+|heya|howdy|good morning|good evening|yo)\b/i.test(query.trim()) ||
+      /\b(my name is|i am|i'm|this is)\b/i.test(query.trim())
+    ) {
+      intent = "general_info";
+      finalReply = "Hi there! 👋 I'm the BookLeaf support assistant. How can I help you with your publishing journey today";
+      confidence = 98;
+    } else {
+      // Unmatched / Escalation
+      intent = "general_info";
+      finalReply =
+        "I'm not completely sure about that but I have shared your question with our support team so they can look into it for you right away. You can also reach us directly at support@bookleafpub.com";
+      confidence = 35;
+      source = "none";
+    }
   }
 
   escalated = confidence < 80;
 
-  return { reply, confidence, escalated, intent, matchedEmail: activeEmail, source, authorFound };
+  return { reply: finalReply, confidence, escalated, intent, matchedEmail: activeEmail, source, authorFound };
 }
 
 // ─── Universal Sanitizer for Human Tone ─────────────────────────────
@@ -963,6 +986,7 @@ export const sendChat = createServerFn({ method: "POST" })
     const geminiResult = await geminiPreprocess(data.message, data.history || []);
     const preprocessedMessage = geminiResult?.correctedQuery || data.message;
     console.log(`[sendChat] Original: "${data.message}" → Preprocessed: "${preprocessedMessage}"`);
+    console.log(`[sendChat] Extracted Intents:`, geminiResult?.extractedIntents || []);
 
     // Overwrite data.message with the AI-corrected version for all downstream strategies
     const enhancedData = { ...data, message: preprocessedMessage };
@@ -1011,8 +1035,24 @@ export const sendChat = createServerFn({ method: "POST" })
     let matchedEmail: string | null = null;
     if (data.sessionId) {
       matchedEmail = await lookupSessionEmail(data.sessionId);
-      console.log(`[sendChat] Session memory lookup:`, matchedEmail);
     }
+
+    // 2b. Fallback: Search history for an email if session lookup fails
+    if (!matchedEmail && data.history?.length > 0) {
+      const reversedHistory = [...data.history].reverse();
+      for (const msg of reversedHistory) {
+        if (msg.role !== "user") continue;
+        const emails = msg.content.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g) ?? [];
+        const valids = emails.filter(isValidAuthorEmail);
+        if (valids.length >= 1) {
+          matchedEmail = valids[valids.length - 1].toLowerCase();
+          console.log(`[sendChat] Recovered email from history: ${matchedEmail}`);
+          break;
+        }
+      }
+    }
+
+    console.log(`[sendChat] Active email context:`, matchedEmail || "none");
 
     // 3. Email extraction/overrides
     if (validEmails.length === 1) {
