@@ -62,10 +62,7 @@ function ChatPage() {
     const text = input.trim();
     if (!text || loading) return;
     setInput("");
-    const next: Msg[] = [
-      ...messages,
-      { role: "user", content: text, timestamp: Date.now() },
-    ];
+    const next: Msg[] = [...messages, { role: "user", content: text, timestamp: Date.now() }];
     setMessages(next);
     setLoading(true);
 
@@ -118,19 +115,14 @@ function ChatPage() {
             <BookOpen className="h-5 w-5" />
           </div>
           <div>
-            <h1 className="text-base font-semibold leading-tight">
-              BookLeaf Publishing
-            </h1>
+            <h1 className="text-base font-semibold leading-tight">BookLeaf Publishing</h1>
             <p className="text-xs text-muted-foreground">Author Support</p>
           </div>
         </div>
       </header>
 
       <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col overflow-hidden px-3 sm:px-4">
-        <div
-          ref={scrollRef}
-          className="flex-1 space-y-4 overflow-y-auto py-4 sm:py-6"
-        >
+        <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto py-4 sm:py-6">
           {messages.map((m, i) => (
             <MessageBubble key={i} msg={m} />
           ))}
@@ -223,9 +215,7 @@ function Avatar({ role }: { role: "user" | "assistant" }) {
   return (
     <div
       className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
-        isUser
-          ? "bg-secondary text-secondary-foreground"
-          : "bg-primary text-primary-foreground"
+        isUser ? "bg-secondary text-secondary-foreground" : "bg-primary text-primary-foreground"
       }`}
     >
       {isUser ? <UserRound className="h-4 w-4" /> : <Bot className="h-4 w-4" />}

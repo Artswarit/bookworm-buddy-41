@@ -10,7 +10,10 @@ import { createClient } from "@supabase/supabase-js";
 
 const chatSchema = z.object({
   message: z.string().min(1).max(2000),
-  history: z.array(z.object({ role: z.enum(["user", "assistant"]), content: z.string() })).max(20).default([]),
+  history: z
+    .array(z.object({ role: z.enum(["user", "assistant"]), content: z.string() }))
+    .max(20)
+    .default([]),
 });
 
 type ChatResult = {
@@ -68,54 +71,77 @@ const KNOWLEDGE_BASE: Record<string, string> = {
 // ─── Mocked Author Database ──────────────────────────────────────────
 const MOCK_AUTHORS: Record<string, any> = {
   "priya.sharma@gmail.com": {
-    email: "priya.sharma@gmail.com", name: "Priya Sharma",
-    book_title: "Whispers of the Valley", isbn: "978-93-12345-01-1",
-    final_submission_date: "November 10, 2024", book_live_date: "January 15, 2025",
+    email: "priya.sharma@gmail.com",
+    name: "Priya Sharma",
+    book_title: "Whispers of the Valley",
+    isbn: "978-93-12345-01-1",
+    final_submission_date: "November 10, 2024",
+    book_live_date: "January 15, 2025",
     royalty_status: "Processed. We credited 4,200 rupees on March 1, 2025.",
     add_on_services: ["Bestseller Package", "PR Campaign"],
     author_copy_status: "Dispatched on January 20, 2025 via BlueDart (AWB: BD9234567)",
-    publishing_stage: "Live", dashboard_access: "Active",
+    publishing_stage: "Live",
+    dashboard_access: "Active",
   },
   "arjun.mehta@yahoo.com": {
-    email: "arjun.mehta@yahoo.com", name: "Arjun Mehta",
-    book_title: "The Iron Compass", isbn: "978-93-12345-02-8",
-    final_submission_date: "January 5, 2025", book_live_date: "April 20, 2025",
+    email: "arjun.mehta@yahoo.com",
+    name: "Arjun Mehta",
+    book_title: "The Iron Compass",
+    isbn: "978-93-12345-02-8",
+    final_submission_date: "January 5, 2025",
+    book_live_date: "April 20, 2025",
     royalty_status: "Pending. Your first royalty cycle starts in Q3 2025.",
     add_on_services: ["Award Submission"],
     author_copy_status: "In progress. We expect to ship them by April 25, 2025.",
-    publishing_stage: "Pre-Launch", dashboard_access: "Active",
+    publishing_stage: "Pre-Launch",
+    dashboard_access: "Active",
   },
   "sara.johnson@xyz.com": {
-    email: "sara.johnson@xyz.com", name: "Sara Johnson",
-    book_title: "Echoes in Bloom", isbn: "978-93-12345-03-5",
-    final_submission_date: "February 18, 2025", book_live_date: "June 1, 2025",
+    email: "sara.johnson@xyz.com",
+    name: "Sara Johnson",
+    book_title: "Echoes in Bloom",
+    isbn: "978-93-12345-03-5",
+    final_submission_date: "February 18, 2025",
+    book_live_date: "June 1, 2025",
     royalty_status: "Not applicable yet because your book isn't live.",
     add_on_services: ["Bestseller Package"],
     author_copy_status: "Not shipped yet since your book is still in progress.",
-    publishing_stage: "Editing & Design", dashboard_access: "Active",
+    publishing_stage: "Editing & Design",
+    dashboard_access: "Active",
   },
   "vikram.nair@hotmail.com": {
-    email: "vikram.nair@hotmail.com", name: "Vikram Nair",
-    book_title: "Silicon Dreams", isbn: "978-93-12345-04-2",
-    final_submission_date: "September 1, 2024", book_live_date: "December 10, 2024",
+    email: "vikram.nair@hotmail.com",
+    name: "Vikram Nair",
+    book_title: "Silicon Dreams",
+    isbn: "978-93-12345-04-2",
+    final_submission_date: "September 1, 2024",
+    book_live_date: "December 10, 2024",
     royalty_status: "Processed. We credited 7,800 rupees on March 1, 2025.",
     add_on_services: ["PR Campaign", "Award Submission", "Bestseller Package"],
     author_copy_status: "Delivered on December 15, 2024.",
-    publishing_stage: "Live", dashboard_access: "Active",
+    publishing_stage: "Live",
+    dashboard_access: "Active",
   },
   "meera.iyer@gmail.com": {
-    email: "meera.iyer@gmail.com", name: "Meera Iyer",
-    book_title: "The Last Garden", isbn: "978-93-12345-05-9",
-    final_submission_date: "March 10, 2025", book_live_date: "July 15, 2025",
+    email: "meera.iyer@gmail.com",
+    name: "Meera Iyer",
+    book_title: "The Last Garden",
+    isbn: "978-93-12345-05-9",
+    final_submission_date: "March 10, 2025",
+    book_live_date: "July 15, 2025",
     royalty_status: "Not applicable yet.",
     add_on_services: [],
     author_copy_status: "Not shipped yet.",
-    publishing_stage: "Manuscript Review", dashboard_access: "Active",
+    publishing_stage: "Manuscript Review",
+    dashboard_access: "Active",
   },
 };
 
 // ─── n8n Webhook path ────────────────────────────────────────────────
-async function sendViaN8nWebhook(data: z.infer<typeof chatSchema>, matchedEmail: string | null): Promise<ChatResult> {
+async function sendViaN8nWebhook(
+  data: z.infer<typeof chatSchema>,
+  matchedEmail: string | null,
+): Promise<ChatResult> {
   const webhookUrl = process.env.N8N_WEBHOOK_URL || process.env.VITE_N8N_WEBHOOK_URL;
   if (!webhookUrl) throw new Error("N8N_WEBHOOK_NOT_CONFIGURED");
   const controller = new AbortController();
@@ -143,53 +169,100 @@ async function sendViaN8nWebhook(data: z.infer<typeof chatSchema>, matchedEmail:
       source: normalizeSource(json.data_source),
       authorFound: json.data_source === "database" || json.data_source === "supabase_live",
     };
-  } finally { clearTimeout(timeout); }
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 // ─── n8n MCP path (JSON-RPC over Streamable HTTP) ────────────────────
-async function mcpCall(token: string, method: string, params: Record<string, unknown>, signal?: AbortSignal): Promise<any> {
+async function mcpCall(
+  token: string,
+  method: string,
+  params: Record<string, unknown>,
+  signal?: AbortSignal,
+): Promise<any> {
   const res = await fetch("https://ashwarit.app.n8n.cloud/mcp-server/http", {
     method: "POST",
-    headers: { "Content-Type": "application/json", Accept: "application/json, text/event-stream", Authorization: `Bearer ${token}` },
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json, text/event-stream",
+      Authorization: `Bearer ${token}`,
+    },
     signal,
     body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
   });
   if (!res.ok) throw new Error(`MCP_HTTP_${res.status}`);
   const sseText = await res.text();
-  const jsonStr = sseText.split("\n").filter((l: string) => l.startsWith("data: ")).map((l: string) => l.slice(6)).join("");
+  const jsonStr = sseText
+    .split("\n")
+    .filter((l: string) => l.startsWith("data: "))
+    .map((l: string) => l.slice(6))
+    .join("");
   if (!jsonStr) throw new Error("MCP_EMPTY_SSE");
   return JSON.parse(jsonStr);
 }
 
-async function sendViaN8nMcp(data: z.infer<typeof chatSchema>, matchedEmail: string | null): Promise<ChatResult> {
+async function sendViaN8nMcp(
+  data: z.infer<typeof chatSchema>,
+  matchedEmail: string | null,
+): Promise<ChatResult> {
   const mcpToken = process.env.N8N_MCP_BEARER_TOKEN;
   if (!mcpToken) throw new Error("N8N_MCP_NOT_CONFIGURED");
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 30_000);
   try {
-    const execResult = await mcpCall(mcpToken, "tools/call", {
-      name: "execute_workflow",
-      arguments: { workflowId: "NB9fdk1sldeIWVOx", data: { query: data.message, email: matchedEmail || "", platform: "web" } },
-    }, controller.signal);
-    const execId = execResult?.result?.structuredContent?.executionId
-      ?? execResult?.result?.content?.[0]?.text?.match(/"executionId"\s*:\s*"?(\w+)"?/)?.[1];
+    const execResult = await mcpCall(
+      mcpToken,
+      "tools/call",
+      {
+        name: "execute_workflow",
+        arguments: {
+          workflowId: "NB9fdk1sldeIWVOx",
+          data: { query: data.message, email: matchedEmail || "", platform: "web" },
+        },
+      },
+      controller.signal,
+    );
+    const execId =
+      execResult?.result?.structuredContent?.executionId ??
+      execResult?.result?.content?.[0]?.text?.match(/"executionId"\s*:\s*"?(\w+)"?/)?.[1];
     if (!execId) throw new Error("MCP_NO_EXEC_ID");
     console.log(`[MCP] Workflow execution started: ${execId}`);
 
     const delays = [1000, 2000, 3000, 4000, 5000, 5000];
     for (const delay of delays) {
-      await new Promise(r => setTimeout(r, delay));
-      const poll = await mcpCall(mcpToken, "tools/call", {
-        name: "get_execution", arguments: { executionId: String(execId), workflowId: "NB9fdk1sldeIWVOx", includeData: true },
-      }, controller.signal);
+      await new Promise((r) => setTimeout(r, delay));
+      const poll = await mcpCall(
+        mcpToken,
+        "tools/call",
+        {
+          name: "get_execution",
+          arguments: {
+            executionId: String(execId),
+            workflowId: "NB9fdk1sldeIWVOx",
+            includeData: true,
+          },
+        },
+        controller.signal,
+      );
       const pollText = poll?.result?.content?.[0]?.text;
       if (!pollText) continue;
       let execData: any;
-      try { execData = JSON.parse(pollText); } catch { continue; }
+      try {
+        execData = JSON.parse(pollText);
+      } catch {
+        continue;
+      }
       const status = execData?.status ?? execData?.data?.status;
       if (status === "running" || status === "waiting") continue;
       const runData = execData?.data?.resultData?.runData ?? {};
-      for (const nodeName of ["14 - Send HTTP Response", "12 - Build Final Response", "10b - Resolved Handler", "10a - Escalation Handler", "ERROR - Global Fallback Handler"]) {
+      for (const nodeName of [
+        "14 - Send HTTP Response",
+        "12 - Build Final Response",
+        "10b - Resolved Handler",
+        "10a - Escalation Handler",
+        "ERROR - Global Fallback Handler",
+      ]) {
         const runs = runData[nodeName];
         if (!runs?.length) continue;
         const output = runs[runs.length - 1]?.data?.main?.[0]?.[0]?.json;
@@ -202,7 +275,8 @@ async function sendViaN8nMcp(data: z.infer<typeof chatSchema>, matchedEmail: str
             intent: String(output.intent ?? "other"),
             matchedEmail: output.matched_email ?? null,
             source: normalizeSource(output.data_source),
-            authorFound: output.data_source === "database" || output.data_source === "supabase_live",
+            authorFound:
+              output.data_source === "database" || output.data_source === "supabase_live",
           };
         }
       }
@@ -210,14 +284,16 @@ async function sendViaN8nMcp(data: z.infer<typeof chatSchema>, matchedEmail: str
       throw new Error("MCP_NO_OUTPUT");
     }
     throw new Error("MCP_POLL_TIMEOUT");
-  } finally { clearTimeout(timeout); }
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 // ─── Supabase & local fallback lookups ─────────────────────────────────
 
 async function lookupAuthor(email: string): Promise<any> {
   const cleanEmail = email.toLowerCase().trim();
-  
+
   try {
     const sbUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
     const sbKey = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
@@ -228,7 +304,7 @@ async function lookupAuthor(email: string): Promise<any> {
         .select("*")
         .eq("email", cleanEmail)
         .maybeSingle();
-      
+
       if (!error && data) {
         console.log(`[Supabase] Found author:`, data);
         return {
@@ -258,7 +334,7 @@ async function logQueryToSupabase(
   matchedEmail: string | null,
   botResponse: string,
   confidenceScore: number,
-  escalated: boolean
+  escalated: boolean,
 ) {
   try {
     const sbUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
@@ -270,7 +346,7 @@ async function logQueryToSupabase(
           apikey: sbKey,
           Authorization: `Bearer ${sbKey}`,
           "Content-Type": "application/json",
-          Prefer: "return=minimal"
+          Prefer: "return=minimal",
         },
         body: JSON.stringify({
           user_query: userQuery,
@@ -278,7 +354,7 @@ async function logQueryToSupabase(
           matched_email: matchedEmail,
           bot_response: botResponse,
           confidence_score: confidenceScore,
-          escalated
+          escalated,
         }),
       }).catch(() => {});
     }
@@ -291,14 +367,18 @@ async function logQueryToSupabase(
 
 // Support/system emails that must NEVER be used as author identity
 const SYSTEM_EMAILS = new Set([
-  "support@bookleafpub.com", "info@bookleafpub.com",
-  "help@bookleafpub.com", "admin@bookleafpub.com",
+  "support@bookleafpub.com",
+  "info@bookleafpub.com",
+  "help@bookleafpub.com",
+  "admin@bookleafpub.com",
   "noreply@bookleafpub.com",
 ]);
 
 function isValidAuthorEmail(email: string): boolean {
-  return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)
-    && !SYSTEM_EMAILS.has(email.toLowerCase());
+  return (
+    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email) &&
+    !SYSTEM_EMAILS.has(email.toLowerCase())
+  );
 }
 
 async function sendViaBuiltinKB(data: z.infer<typeof chatSchema>): Promise<ChatResult> {
@@ -365,7 +445,8 @@ async function sendViaBuiltinKB(data: z.infer<typeof chatSchema>): Promise<ChatR
   }
 
   // ── Helper: is this a personal/possessive query requiring author identity? ──
-  const isPersonalQuery = /\b(my |i have|i got|where.s my|what.s my|check my|show my|give me my)\b/i.test(data.message);
+  const isPersonalQuery =
+    /\b(my |i have|i got|where.s my|what.s my|check my|show my|give me my)\b/i.test(data.message);
 
   let intent = "";
   let reply = "";
@@ -380,7 +461,8 @@ async function sendViaBuiltinKB(data: z.infer<typeof chatSchema>): Promise<ChatR
   const trimmed = data.message.trim();
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const isEmailOnly = emailRegex.test(trimmed);
-  const hasAtButInvalid = trimmed.includes("@") && !isEmailOnly && trimmed.split(/\s+/).length === 1;
+  const hasAtButInvalid =
+    trimmed.includes("@") && !isEmailOnly && trimmed.split(/\s+/).length === 1;
 
   if (isEmailOnly) {
     intent = "email_submission";
@@ -403,9 +485,7 @@ async function sendViaBuiltinKB(data: z.infer<typeof chatSchema>): Promise<ChatR
     }
     await logQueryToSupabase(data.message, intent, activeEmail, reply, confidence, escalated);
     return { reply, confidence, escalated, intent, matchedEmail: activeEmail, source, authorFound };
-  }
-
-  else if (hasAtButInvalid) {
+  } else if (hasAtButInvalid) {
     intent = "email_invalid";
     reply = "Please enter a valid email address so I can look up your profile.";
     confidence = 85;
@@ -417,9 +497,14 @@ async function sendViaBuiltinKB(data: z.infer<typeof chatSchema>): Promise<ChatR
   }
 
   // ── Off-topic check ──
-  else if (/\b(joke|riddle|bake|cake|recipe|cook|food|chocolate|ipl|cricket|sports|football|won.*match|game|score|weather|temperature|rain|sun|joke|funny|movie|song|music|singer)\b/i.test(query)) {
+  else if (
+    /\b(joke|riddle|bake|cake|recipe|cook|food|chocolate|ipl|cricket|sports|football|won.*match|game|score|weather|temperature|rain|sun|joke|funny|movie|song|music|singer)\b/i.test(
+      query,
+    )
+  ) {
     intent = "off_topic";
-    reply = "That doesn’t seem related to BookLeaf publishing support, so I’ve shared it with our support team.";
+    reply =
+      "That doesn’t seem related to BookLeaf publishing support, so I’ve shared it with our support team.";
     confidence = 30;
     escalated = true;
     source = "none";
@@ -431,16 +516,23 @@ async function sendViaBuiltinKB(data: z.infer<typeof chatSchema>): Promise<ChatR
     reply = KNOWLEDGE_BASE.award_submission;
   }
   // Book status / "is my book live" (must have book-related keyword)
-  else if (/\b(book.*(live|status|stage|progress|ready)|is.*book.*live|where.*my.*book|my book.*(status|stage))\b/.test(query)) {
+  else if (
+    /\b(book.*(live|status|stage|progress|ready)|is.*book.*live|where.*my.*book|my book.*(status|stage))\b/.test(
+      query,
+    )
+  ) {
     intent = "publishing_stage";
     if (activeAuthor) {
       reply = `Hey ${activeAuthor.name}! Your book "${activeAuthor.book_title}" is in the ${activeAuthor.publishing_stage} stage. It was submitted on ${activeAuthor.final_submission_date}${activeAuthor.book_live_date ? `, and we expect it to go live by ${activeAuthor.book_live_date}` : ""}.`;
-      source = "database"; authorFound = true; confidence = 96;
+      source = "database";
+      authorFound = true;
+      confidence = 96;
     } else if (activeEmail) {
       reply = `I couldn't find an account for ${activeEmail}. Could you check if that's the email you registered with? You can also reach us at support@bookleafpub.com.`;
       confidence = 60;
     } else {
-      reply = "I can definitely check your book's status for you! Could you share your registered email so I can look up your account?";
+      reply =
+        "I can definitely check your book's status for you! Could you share your registered email so I can look up your account?";
       confidence = 85;
     }
   }
@@ -449,47 +541,67 @@ async function sendViaBuiltinKB(data: z.infer<typeof chatSchema>): Promise<ChatR
     intent = "royalty_status";
     if (activeAuthor) {
       reply = `Hey ${activeAuthor.name}! Regarding royalties for "${activeAuthor.book_title}": ${activeAuthor.royalty_status} As a quick reminder, royalties are calculated monthly and usually paid by the 28th of the following month.`;
-      source = "database"; authorFound = true; confidence = 95;
+      source = "database";
+      authorFound = true;
+      confidence = 95;
     } else if (activeEmail) {
       reply = `I couldn't find an account for ${activeEmail}. Could you check that email? You can also reach us at support@bookleafpub.com.`;
       confidence = 60;
     } else if (isPersonalQuery) {
-      reply = "I can check your royalty details for you! Could you share your registered email so I can pull up your info?";
+      reply =
+        "I can check your royalty details for you! Could you share your registered email so I can pull up your info?";
       confidence = 85;
-    } else { reply = KNOWLEDGE_BASE.royalty_policy; }
+    } else {
+      reply = KNOWLEDGE_BASE.royalty_policy;
+    }
   }
   // ISBN
   else if (/\bisbn\b/.test(query)) {
     intent = "isbn_lookup";
     if (activeAuthor) {
       reply = `Hey ${activeAuthor.name}! The ISBN for "${activeAuthor.book_title}" is ${activeAuthor.isbn}. As a reminder, BookLeaf provides a free ISBN during production. It will appear on your back cover and retail listings like Amazon and Flipkart.`;
-      source = "database"; authorFound = true; confidence = 96;
+      source = "database";
+      authorFound = true;
+      confidence = 96;
     } else if (isPersonalQuery && !activeEmail) {
-      reply = "I can check your ISBN for you! Could you share your registered email so I can look up your details?";
+      reply =
+        "I can check your ISBN for you! Could you share your registered email so I can look up your details?";
       confidence = 85;
-    } else { reply = KNOWLEDGE_BASE.isbn_info; }
+    } else {
+      reply = KNOWLEDGE_BASE.isbn_info;
+    }
   }
   // Author copies
   else if (/\b(author.?cop|copies|my cop)\b/.test(query)) {
     intent = "author_copies";
     if (activeAuthor) {
       reply = `Hey ${activeAuthor.name}! Regarding your author copies for "${activeAuthor.book_title}": ${activeAuthor.author_copy_status} As a reminder, every author gets 2 free paperbacks once published, and you can order more at author prices on your dashboard.`;
-      source = "database"; authorFound = true; confidence = 94;
+      source = "database";
+      authorFound = true;
+      confidence = 94;
     } else if (isPersonalQuery && !activeEmail) {
-      reply = "I can check your author copies status for you! Could you share your registered email so I can look it up?";
+      reply =
+        "I can check your author copies status for you! Could you share your registered email so I can look it up?";
       confidence = 85;
-    } else { reply = KNOWLEDGE_BASE.author_copies; }
+    } else {
+      reply = KNOWLEDGE_BASE.author_copies;
+    }
   }
   // Add-on services
   else if (/\b(add.?on|addon|service|what.*include)\b/.test(query)) {
     intent = "add_on_services";
     if (activeAuthor && activeAuthor.add_on_services?.length > 0) {
       reply = `Hey ${activeAuthor.name}! You have these active add-ons for "${activeAuthor.book_title}": ${activeAuthor.add_on_services.join(", ")}. BookLeaf offers various add-on services, which you can add anytime before the final proofing stage.`;
-      source = "database"; authorFound = true; confidence = 93;
+      source = "database";
+      authorFound = true;
+      confidence = 93;
     } else if (isPersonalQuery && !activeEmail) {
-      reply = "I can check your active add-on services for you! Could you share your registered email so I can look them up?";
+      reply =
+        "I can check your active add-on services for you! Could you share your registered email so I can look them up?";
       confidence = 85;
-    } else { reply = KNOWLEDGE_BASE.add_on_services; }
+    } else {
+      reply = KNOWLEDGE_BASE.add_on_services;
+    }
   }
   // Bestseller package
   else if (/\b(bestseller|best.?seller)\b/.test(query)) {
@@ -553,26 +665,32 @@ async function sendViaBuiltinKB(data: z.infer<typeof chatSchema>): Promise<ChatR
     reply = KNOWLEDGE_BASE.support_limitations;
   }
   // Contact (but not "my email is..." — that's personal context)
-  else if (/\b(contact|reach out|email.*support|support.*email|address|how.*reach)\b/.test(query) && !/my email/i.test(query)) {
+  else if (
+    /\b(contact|reach out|email.*support|support.*email|address|how.*reach)\b/.test(query) &&
+    !/my email/i.test(query)
+  ) {
     intent = "contact";
     reply = KNOWLEDGE_BASE.contact;
   }
   // Greeting
   else if (/^(hi|hello|hey|good morning|good evening)\b/.test(query.trim())) {
     intent = "greeting";
-    reply = "Hi there! 👋 I'm the BookLeaf support assistant. I can help you with publishing timelines, royalties, ISBNs, book status, and author copies. What's on your mind today?";
+    reply =
+      "Hi there! 👋 I'm the BookLeaf support assistant. I can help you with publishing timelines, royalties, ISBNs, book status, and author copies. What's on your mind today?";
     confidence = 98;
   }
   // Complaints / legal / sensitive
   else if (/\b(complaint|legal|lawyer|sue|harass|threat)\b/.test(query)) {
     intent = "complaint";
-    reply = "I'm sorry to hear you're having this experience. For any complaints or sensitive issues, please email us directly at support@bookleafpub.com. One of our team members will get back to you within 24 hours.";
+    reply =
+      "I'm sorry to hear you're having this experience. For any complaints or sensitive issues, please email us directly at support@bookleafpub.com. One of our team members will get back to you within 24 hours.";
     confidence = 40;
   }
   // ── STRICT: Unmatched query → escalate (never hallucinate) ──
   else {
     intent = "unmatched";
-    reply = "I'm not able to verify this request right now, so I've shared this with our support team. They'll review it and get back to you shortly. You can also reach us at support@bookleafpub.com.";
+    reply =
+      "I'm not able to verify this request right now, so I've shared this with our support team. They'll review it and get back to you shortly. You can also reach us at support@bookleafpub.com.";
     confidence = 30;
     source = "none";
   }
@@ -600,7 +718,8 @@ export const sendChat = createServerFn({ method: "POST" })
     const trimmed = data.message.trim();
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const isEmailOnly = emailRegex.test(trimmed);
-    const hasAtButInvalid = trimmed.includes("@") && !isEmailOnly && trimmed.split(/\s+/).length === 1;
+    const hasAtButInvalid =
+      trimmed.includes("@") && !isEmailOnly && trimmed.split(/\s+/).length === 1;
 
     if (isEmailOnly || hasAtButInvalid) {
       console.log(`[sendChat] Routing email-only / invalid metadata directly to built-in KB.`);
@@ -610,7 +729,7 @@ export const sendChat = createServerFn({ method: "POST" })
     // 2. Scan history to find if we already have a verified author email to preserve session
     let matchedEmail: string | null = null;
     const emailRe = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-    
+
     // Search history for a verified author
     for (const msg of data.history) {
       if (msg.role !== "user") continue;
@@ -628,8 +747,13 @@ export const sendChat = createServerFn({ method: "POST" })
     }
 
     const strategies: Array<{ name: string; fn: () => Promise<ChatResult> }> = [];
-    if (process.env.N8N_WEBHOOK_URL || process.env.VITE_N8N_WEBHOOK_URL) strategies.push({ name: "n8n-webhook", fn: () => sendViaN8nWebhook(data, matchedEmail) });
-    if (process.env.N8N_MCP_BEARER_TOKEN) strategies.push({ name: "n8n-mcp", fn: () => sendViaN8nMcp(data, matchedEmail) });
+    if (process.env.N8N_WEBHOOK_URL || process.env.VITE_N8N_WEBHOOK_URL)
+      strategies.push({
+        name: "n8n-webhook",
+        fn: () => sendViaN8nWebhook(data, matchedEmail),
+      });
+    if (process.env.N8N_MCP_BEARER_TOKEN)
+      strategies.push({ name: "n8n-mcp", fn: () => sendViaN8nMcp(data, matchedEmail) });
     strategies.push({ name: "built-in-kb", fn: () => sendViaBuiltinKB(data) });
 
     let lastError: any;
@@ -637,7 +761,7 @@ export const sendChat = createServerFn({ method: "POST" })
       try {
         console.log(`[sendChat] Trying ${name}...`);
         const result = await fn();
-        
+
         // Add protection against empty or invalid responses
         if (result && result.reply && result.reply.trim().length > 0) {
           console.log(`[sendChat] ${name} succeeded (confidence: ${result.confidence}%)`);
@@ -656,8 +780,16 @@ export const sendChat = createServerFn({ method: "POST" })
     }
 
     // Graceful fallback if everything fails
-    const fallbackResponse = "I’m having trouble processing this request right now. Please try again in a moment.";
-    await logQueryToSupabase(data.message, "error_fallback", matchedEmail, fallbackResponse, 0, true);
+    const fallbackResponse =
+      "I’m having trouble processing this request right now. Please try again in a moment.";
+    await logQueryToSupabase(
+      data.message,
+      "error_fallback",
+      matchedEmail,
+      fallbackResponse,
+      0,
+      true,
+    );
 
     return {
       reply: fallbackResponse,

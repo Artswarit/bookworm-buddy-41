@@ -73,17 +73,34 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "BookLeaf Publishing" },
-      { name: "description", content: "Author Hub is a customer support chatbot for BookLeaf Publishing authors." },
+      {
+        name: "description",
+        content: "Author Hub is a customer support chatbot for BookLeaf Publishing authors.",
+      },
       { name: "author", content: "Lovable" },
       { property: "og:title", content: "BookLeaf Publishing" },
-      { property: "og:description", content: "Author Hub is a customer support chatbot for BookLeaf Publishing authors." },
+      {
+        property: "og:description",
+        content: "Author Hub is a customer support chatbot for BookLeaf Publishing authors.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "BookLeaf Publishing" },
-      { name: "twitter:description", content: "Author Hub is a customer support chatbot for BookLeaf Publishing authors." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/764cc928-54bf-4eff-b34e-5bc0c459823e/id-preview-c86a5a00--3cb06268-27b8-47c2-9a0a-d0fe2a276896.lovable.app-1779125591872.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/764cc928-54bf-4eff-b34e-5bc0c459823e/id-preview-c86a5a00--3cb06268-27b8-47c2-9a0a-d0fe2a276896.lovable.app-1779125591872.png" },
+      {
+        name: "twitter:description",
+        content: "Author Hub is a customer support chatbot for BookLeaf Publishing authors.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/764cc928-54bf-4eff-b34e-5bc0c459823e/id-preview-c86a5a00--3cb06268-27b8-47c2-9a0a-d0fe2a276896.lovable.app-1779125591872.png",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/764cc928-54bf-4eff-b34e-5bc0c459823e/id-preview-c86a5a00--3cb06268-27b8-47c2-9a0a-d0fe2a276896.lovable.app-1779125591872.png",
+      },
     ],
     links: [
       {
