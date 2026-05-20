@@ -164,7 +164,13 @@ async function sendViaN8nWebhook(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       signal: controller.signal,
-      body: JSON.stringify({ query: data.message, email: matchedEmail || "", platform: "web" }),
+      body: JSON.stringify({
+        query: data.message,
+        email: matchedEmail || "",
+        platform: "web",
+        sessionId: data.sessionId || "",
+        history: data.history || [],
+      }),
     });
     if (!res.ok) throw new Error(`N8N_HTTP_${res.status}`);
     const text = await res.text();
@@ -241,7 +247,13 @@ async function sendViaN8nMcp(
         name: "execute_workflow",
         arguments: {
           workflowId: "NB9fdk1sldeIWVOx",
-          data: { query: data.message, email: matchedEmail || "", platform: "web" },
+          data: {
+            query: data.message,
+            email: matchedEmail || "",
+            platform: "web",
+            sessionId: data.sessionId || "",
+            history: data.history || [],
+          },
         },
       },
       controller.signal,
@@ -982,10 +994,11 @@ export const sendChat = createServerFn({ method: "POST" })
     const cleanReply = sanitizeReplyForHumanTone(finalResult.reply);
 
     // 5. Update session memory if matched email changed or intent verified
-    if (data.sessionId && finalResult.matchedEmail) {
+    const resolvedEmailToSave = finalResult.matchedEmail || matchedEmail;
+    if (data.sessionId && resolvedEmailToSave) {
       await saveSessionEmail(
         data.sessionId,
-        finalResult.matchedEmail,
+        resolvedEmailToSave,
         finalResult.intent,
         data.message,
       );
